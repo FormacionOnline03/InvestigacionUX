@@ -2083,7 +2083,7 @@ audio.addEventListener('ended', () => {
 // ── Sequences ─────────────────────────────────────────────────────────────────
 async function startFirstSequence() {
   await show('row-julia', 600);
-  await show('row-typing-q', 1800);
+  await showTyping('row-typing-q');
   await delay(2200); hide('row-typing-q');
   await show('row-simon-q', 80);
   await delay(600);
@@ -2111,20 +2111,20 @@ function selectOption(card) {
 }
 
 async function startSecondSequence() {
-  await show('row-typing-r1', 800);
+  await showTyping('row-typing-r1');
   await delay(2400); hide('row-typing-r1');
   await show('row-simon-r1', 80);
 
-  await show('row-typing-r2', 2800);
+  await showTyping('row-typing-r2');
   await delay(2400); hide('row-typing-r2');
   await show('row-simon-r2', 80);
 
-  await show('row-typing-r3', 2800);
+  await showTyping('row-typing-r3');
   await delay(2400); hide('row-typing-r3');
   await show('row-simon-r3', 80);
 
   // Show resource
-  await show('row-typing-res', 1200);
+  await showTyping('row-typing-res');
   await delay(1800); hide('row-typing-res');
   document.getElementById('resourceIframe').src = RESOURCE_URL;
   await show('row-simon-res', 80);
@@ -2135,12 +2135,12 @@ async function startSecondSequence() {
   hide('instr-res');
 
   // Continue with tarea sequence
-  await show('row-typing-tarea', 800);
+  await showTyping('row-typing-tarea');
   await delay(1800); hide('row-typing-tarea');
   await show('row-simon-tarea-txt', 80);
 
   // Tarea 01
-  await show('row-typing-t1', 1000);
+  await showTyping('row-typing-t1');
   await delay(1800); hide('row-typing-t1');
   document.getElementById('tarea01Iframe').src = RESOURCE_MAP['tarea01'];
   await show('row-simon-t1', 80);
@@ -2150,7 +2150,7 @@ async function startSecondSequence() {
   hide('instr-t1');
 
   // Tarea 02
-  await show('row-typing-t2', 800);
+  await showTyping('row-typing-t2');
   await delay(1800); hide('row-typing-t2');
   document.getElementById('tarea02Iframe').src = RESOURCE_MAP['tarea02'];
   await show('row-simon-t2', 80);
@@ -2247,10 +2247,10 @@ const RESUME_AFTER_CLOSE = {
 
 async function resumeAfterMainClose() {
   hide('instr-res');
-  await show('row-typing-tarea', 800);
+  await showTyping('row-typing-tarea');
   await delay(1800); hide('row-typing-tarea');
   await show('row-simon-tarea-txt', 80);
-  await show('row-typing-t1', 1000);
+  await showTyping('row-typing-t1');
   await delay(1800); hide('row-typing-t1');
   document.getElementById('tarea01Iframe').src = RESOURCE_MAP['tarea01'];
   await show('row-simon-t1', 80);
@@ -2262,7 +2262,7 @@ async function resumeAfterMainClose() {
 
 async function resumeAfterTarea01Close() {
   hide('instr-t1');
-  await show('row-typing-t2', 800);
+  await showTyping('row-typing-t2');
   await delay(1800); hide('row-typing-t2');
   document.getElementById('tarea02Iframe').src = RESOURCE_MAP['tarea02'];
   await show('row-simon-t2', 80);
@@ -2281,15 +2281,26 @@ window.addEventListener('keydown', e => { if (e.key === 'Escape') closeResource(
 // ── Helpers ───────────────────────────────────────────────────────────────────
 function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
 
+let _lastMsgWords = 8;
+
 function show(id, ms) {
   return new Promise(resolve => {
     setTimeout(() => {
       const el = document.getElementById(id);
       if (!el) { resolve(); return; }
       el.classList.remove('hidden');
+      if (id.startsWith('row-simon-') || id.startsWith('row-plain-')) {
+        const words = (el.textContent || '').trim().split(/\s+/).filter(w => w.length > 0).length;
+        if (words > 0) _lastMsgWords = words;
+      }
       requestAnimationFrame(() => { el.classList.add('visible'); scrollBottom(); resolve(); });
     }, ms);
   });
+}
+
+function showTyping(id) {
+  const ms = Math.min(5500, Math.max(1500, _lastMsgWords * 300));
+  return show(id, ms);
 }
 
 function showInstruction(id) {
@@ -2396,7 +2407,7 @@ async function startChat2Sequence() {
 }
 
 async function startChat2FirstSequence() {
-  await show('row-typing-q-c2', 800);
+  await showTyping('row-typing-q-c2');
   await delay(2200); hide('row-typing-q-c2');
   await show('row-simon-q-c2', 80);
   await delay(600);
@@ -2424,19 +2435,19 @@ function selectOption2(card) {
 }
 
 async function startChat2SecondSequence() {
-  await show('row-typing-r1-c2', 800);
+  await showTyping('row-typing-r1-c2');
   await delay(2400); hide('row-typing-r1-c2');
   await show('row-simon-r1-c2', 80);
 
-  await show('row-typing-r2-c2', 2800);
+  await showTyping('row-typing-r2-c2');
   await delay(2400); hide('row-typing-r2-c2');
   await show('row-simon-r2-c2', 80);
 
-  await show('row-typing-r3-c2', 2800);
+  await showTyping('row-typing-r3-c2');
   await delay(2400); hide('row-typing-r3-c2');
   await show('row-simon-r3-c2', 80);
 
-  await show('row-typing-res-c2', 1200);
+  await showTyping('row-typing-res-c2');
   await delay(1800); hide('row-typing-res-c2');
   document.getElementById('reforzarIframe').src = 'Teoría/Diapo8/investigacion-secundaria.html';
   await show('row-simon-res-c2', 80);
@@ -2602,11 +2613,11 @@ async function startChat3Sequence() {
 }
 
 async function startChat3FirstSequence() {
-  await show('row-typing-q1-c3', 800);
+  await showTyping('row-typing-q1-c3');
   await delay(2200); hide('row-typing-q1-c3');
   await show('row-simon-q1-c3', 80);
 
-  await show('row-typing-q2-c3', 2800);
+  await showTyping('row-typing-q2-c3');
   await delay(2200); hide('row-typing-q2-c3');
   await show('row-simon-q2-c3', 80);
 
@@ -2635,17 +2646,17 @@ function selectOption3(card) {
 }
 
 async function startChat3VideoSequence() {
-  await show('row-typing-video-c3', 800);
+  await showTyping('row-typing-video-c3');
   await delay(2200); hide('row-typing-video-c3');
   await show('row-video-c3', 80);
 }
 
 async function startChat3FinalSequence() {
-  await show('row-typing-final-c3', 800);
+  await showTyping('row-typing-final-c3');
   await delay(2400); hide('row-typing-final-c3');
   await show('row-simon-final-c3', 80);
 
-  await show('row-typing-res-c3', 1200);
+  await showTyping('row-typing-res-c3');
   await delay(1800); hide('row-typing-res-c3');
   document.getElementById('diapo11Iframe').src = 'Teoría/Diapo11/index.html';
   await show('row-simon-res-c3', 80);
@@ -2774,15 +2785,15 @@ function selectOption1c4(card) {
 }
 
 async function startChat4SecondSequence() {
-  await show('row-typing-r1-c4', 800);
+  await showTyping('row-typing-r1-c4');
   await delay(2400); hide('row-typing-r1-c4');
   await show('row-simon-r1-c4', 80);
 
-  await show('row-typing-r2-c4', 2800);
+  await showTyping('row-typing-r2-c4');
   await delay(2400); hide('row-typing-r2-c4');
   await show('row-simon-r2-c4', 80);
 
-  await show('row-typing-q2-c4', 2800);
+  await showTyping('row-typing-q2-c4');
   await delay(2400); hide('row-typing-q2-c4');
   await show('row-simon-q2-c4', 80);
 
@@ -2811,11 +2822,11 @@ function selectOption2c4(card) {
 }
 
 async function startChat4ThirdSequence() {
-  await show('row-typing-r3-c4', 800);
+  await showTyping('row-typing-r3-c4');
   await delay(2400); hide('row-typing-r3-c4');
   await show('row-simon-r3-c4', 80);
 
-  await show('row-typing-r4-c4', 2800);
+  await showTyping('row-typing-r4-c4');
   await delay(2400); hide('row-typing-r4-c4');
   await show('row-simon-r4-c4', 80);
 
@@ -2823,7 +2834,7 @@ async function startChat4ThirdSequence() {
 }
 
 async function startChat4FinalSequence() {
-  await show('row-typing-res-c4', 1200);
+  await showTyping('row-typing-res-c4');
   await delay(1800); hide('row-typing-res-c4');
   document.getElementById('diapo15Iframe').src = 'Tareas/drag-and-drop/Diapo15/index.html';
   await show('row-simon-res-c4', 80);
@@ -2863,11 +2874,11 @@ function selectOption1c5(card) {
 }
 
 async function startChat5SecondSequence() {
-  await show('row-typing-r1-c5', 800);
+  await showTyping('row-typing-r1-c5');
   await delay(2400); hide('row-typing-r1-c5');
   await show('row-simon-r1-c5', 80);
 
-  await show('row-typing-r2-c5', 2800);
+  await showTyping('row-typing-r2-c5');
   await delay(2400); hide('row-typing-r2-c5');
   await show('row-simon-r2-c5', 80);
 
@@ -2876,7 +2887,7 @@ async function startChat5SecondSequence() {
 
 // ── Sequence Diapo18/19 ───────────────────────────────────────────────────────
 async function startDiapo18Sequence() {
-  await show('row-typing-res-c5', 1200);
+  await showTyping('row-typing-res-c5');
   await delay(1800); hide('row-typing-res-c5');
   document.getElementById('diapo18Iframe').src = 'Teoría/Diapo18/index.html';
   await show('row-simon-res-c5', 80);
@@ -2889,7 +2900,7 @@ async function startDiapo18Sequence() {
 
 // ── Sequence Diapo20 ──────────────────────────────────────────────────────────
 async function startDiapo20Sequence() {
-  await show('row-typing-res-d20', 1200);
+  await showTyping('row-typing-res-d20');
   await delay(1800); hide('row-typing-res-d20');
   document.getElementById('diapo20Iframe').src = 'Tareas/drag-and-drop/Diapo 20/index_1.html';
   await show('row-simon-res-d20', 80);
@@ -2902,7 +2913,7 @@ async function startDiapo20Sequence() {
 
 // ── Sequence Diapo21 ──────────────────────────────────────────────────────────
 async function startDiapo21Sequence() {
-  await show('row-typing-res-d21', 1200);
+  await showTyping('row-typing-res-d21');
   await delay(1800); hide('row-typing-res-d21');
   document.getElementById('diapo21Iframe').src = 'Teoría/Diapo21/index.html';
   await show('row-simon-res-d21', 80);
@@ -2941,11 +2952,11 @@ function selectOption1c6(card) {
 }
 
 async function startChat6SecondSequence() {
-  await show('row-typing-r1-c6', 800); await delay(2400); hide('row-typing-r1-c6');
+  await showTyping('row-typing-r1-c6'); await delay(2400); hide('row-typing-r1-c6');
   await show('row-simon-r1-c6', 80);
-  await show('row-typing-r2-c6', 2800); await delay(2400); hide('row-typing-r2-c6');
+  await showTyping('row-typing-r2-c6'); await delay(2400); hide('row-typing-r2-c6');
   await show('row-simon-r2-c6', 80);
-  await show('row-typing-q2-c6', 2800); await delay(2200); hide('row-typing-q2-c6');
+  await showTyping('row-typing-q2-c6'); await delay(2200); hide('row-typing-q2-c6');
   await show('row-simon-q2-c6', 80);
   await delay(600);
   document.getElementById('optionsLabel2-c6').classList.remove('hidden');
@@ -2972,11 +2983,11 @@ function selectOption2c6(card) {
 }
 
 async function startChat6ThirdSequence() {
-  await show('row-typing-r3-c6', 800); await delay(2400); hide('row-typing-r3-c6');
+  await showTyping('row-typing-r3-c6'); await delay(2400); hide('row-typing-r3-c6');
   await show('row-simon-r3-c6', 80);
-  await show('row-typing-r4-c6', 2800); await delay(2400); hide('row-typing-r4-c6');
+  await showTyping('row-typing-r4-c6'); await delay(2400); hide('row-typing-r4-c6');
   await show('row-simon-r4-c6', 80);
-  await show('row-typing-q3-c6', 2800); await delay(2200); hide('row-typing-q3-c6');
+  await showTyping('row-typing-q3-c6'); await delay(2200); hide('row-typing-q3-c6');
   await delay(600);
   document.getElementById('optionsLabel3-c6').classList.remove('hidden');
   document.getElementById('optionsGrid3-c6').classList.remove('hidden');
@@ -3002,16 +3013,16 @@ function selectOption3c6(card) {
 }
 
 async function startChat6FourthSequence() {
-  await show('row-typing-r5-c6', 800); await delay(2400); hide('row-typing-r5-c6');
+  await showTyping('row-typing-r5-c6'); await delay(2400); hide('row-typing-r5-c6');
   await show('row-simon-r5-c6', 80);
-  await show('row-typing-r6-c6', 2800); await delay(2400); hide('row-typing-r6-c6');
+  await showTyping('row-typing-r6-c6'); await delay(2400); hide('row-typing-r6-c6');
   await show('row-simon-r6-c6', 80);
   await startDiapo26Sequence();
 }
 
 // ── Sequence Diapo26/27 ───────────────────────────────────────────────────────
 async function startDiapo26Sequence() {
-  await show('row-typing-res-d26', 1200);
+  await showTyping('row-typing-res-d26');
   await delay(1800); hide('row-typing-res-d26');
   document.getElementById('diapo26Iframe').src = 'Teoría/Diapo26/que-sabes-hasta-ahora.html';
   await show('row-simon-res-d26', 80);
@@ -3023,7 +3034,7 @@ async function startDiapo26Sequence() {
 
 // ── Sequence Tarea05 ──────────────────────────────────────────────────────────
 async function startTarea05Sequence() {
-  await show('row-typing-res-t05', 1200);
+  await showTyping('row-typing-res-t05');
   await delay(1800); hide('row-typing-res-t05');
   document.getElementById('tarea05Iframe').src = 'Tareas/Diapo 28 - Fill the gap y multiple choice/Tarea05_2.html';
   await show('row-simon-res-t05', 80);
@@ -3189,69 +3200,69 @@ function selectOption7(n, card) {
 
 const optionCallbacks7 = {
   1: async () => {
-    await show('row-typing-r1-c7', 800); await delay(2400); hide('row-typing-r1-c7'); await show('row-simon-r1-c7', 80);
-    await show('row-typing-q2-c7', 2800); await delay(2400); hide('row-typing-q2-c7'); await show('row-simon-q2-c7', 80);
+    await showTyping('row-typing-r1-c7'); await delay(2400); hide('row-typing-r1-c7'); await show('row-simon-r1-c7', 80);
+    await showTyping('row-typing-q2-c7'); await delay(2400); hide('row-typing-q2-c7'); await show('row-simon-q2-c7', 80);
     await delay(600); showOptions7(2);
   },
   2: async () => {
-    await show('row-typing-a1-c7', 800); await delay(2400); hide('row-typing-a1-c7'); await show('row-audio1-c7', 80);
+    await showTyping('row-typing-a1-c7'); await delay(2400); hide('row-typing-a1-c7'); await show('row-audio1-c7', 80);
   },
   3: async () => {
-    await show('row-typing-r3a-c7', 800); await delay(2400); hide('row-typing-r3a-c7'); await show('row-simon-r3a-c7', 80);
-    await show('row-typing-r3b-c7', 2800); await delay(2400); hide('row-typing-r3b-c7'); await show('row-simon-r3b-c7', 80);
-    await show('row-typing-q4-c7', 2800); await delay(2400); hide('row-typing-q4-c7'); await show('row-simon-q4-c7', 80);
+    await showTyping('row-typing-r3a-c7'); await delay(2400); hide('row-typing-r3a-c7'); await show('row-simon-r3a-c7', 80);
+    await showTyping('row-typing-r3b-c7'); await delay(2400); hide('row-typing-r3b-c7'); await show('row-simon-r3b-c7', 80);
+    await showTyping('row-typing-q4-c7'); await delay(2400); hide('row-typing-q4-c7'); await show('row-simon-q4-c7', 80);
     await delay(600); showOptions7(4);
   },
   4: async () => {
-    await show('row-typing-a2-c7', 800); await delay(2400); hide('row-typing-a2-c7'); await show('row-audio2-c7', 80);
+    await showTyping('row-typing-a2-c7'); await delay(2400); hide('row-typing-a2-c7'); await show('row-audio2-c7', 80);
   },
   5: async () => {
-    await show('row-typing-r5a-c7', 800); await delay(2400); hide('row-typing-r5a-c7'); await show('row-simon-r5a-c7', 80);
-    await show('row-typing-r5b-c7', 2800); await delay(2400); hide('row-typing-r5b-c7'); await show('row-simon-r5b-c7', 80);
-    await show('row-typing-q6-c7', 2800); await delay(2400); hide('row-typing-q6-c7'); await show('row-simon-q6-c7', 80);
+    await showTyping('row-typing-r5a-c7'); await delay(2400); hide('row-typing-r5a-c7'); await show('row-simon-r5a-c7', 80);
+    await showTyping('row-typing-r5b-c7'); await delay(2400); hide('row-typing-r5b-c7'); await show('row-simon-r5b-c7', 80);
+    await showTyping('row-typing-q6-c7'); await delay(2400); hide('row-typing-q6-c7'); await show('row-simon-q6-c7', 80);
     await delay(600); showOptions7(6);
   },
   6: async () => {
-    await show('row-typing-r6-c7', 800); await delay(2400); hide('row-typing-r6-c7'); await show('row-simon-r6-c7', 80);
-    await show('row-typing-q7-c7', 2800); await delay(2400); hide('row-typing-q7-c7'); await show('row-simon-q7-c7', 80);
+    await showTyping('row-typing-r6-c7'); await delay(2400); hide('row-typing-r6-c7'); await show('row-simon-r6-c7', 80);
+    await showTyping('row-typing-q7-c7'); await delay(2400); hide('row-typing-q7-c7'); await show('row-simon-q7-c7', 80);
     await delay(600); showOptions7(7);
   },
   7: async () => {
-    await show('row-typing-r7a-c7', 800); await delay(2400); hide('row-typing-r7a-c7'); await show('row-simon-r7a-c7', 80);
-    await show('row-typing-r7b-c7', 2800); await delay(2400); hide('row-typing-r7b-c7'); await show('row-simon-r7b-c7', 80);
-    await show('row-typing-q8-c7', 2800); await delay(2400); hide('row-typing-q8-c7'); await show('row-simon-q8-c7', 80);
+    await showTyping('row-typing-r7a-c7'); await delay(2400); hide('row-typing-r7a-c7'); await show('row-simon-r7a-c7', 80);
+    await showTyping('row-typing-r7b-c7'); await delay(2400); hide('row-typing-r7b-c7'); await show('row-simon-r7b-c7', 80);
+    await showTyping('row-typing-q8-c7'); await delay(2400); hide('row-typing-q8-c7'); await show('row-simon-q8-c7', 80);
     await delay(600); showOptions7(8);
   },
   8: async () => {
-    await show('row-typing-r8-c7', 800); await delay(2400); hide('row-typing-r8-c7'); await show('row-simon-r8-c7', 80);
-    await show('row-typing-q9-c7', 2800); await delay(2400); hide('row-typing-q9-c7'); await show('row-simon-q9-c7', 80);
+    await showTyping('row-typing-r8-c7'); await delay(2400); hide('row-typing-r8-c7'); await show('row-simon-r8-c7', 80);
+    await showTyping('row-typing-q9-c7'); await delay(2400); hide('row-typing-q9-c7'); await show('row-simon-q9-c7', 80);
     await delay(600); showOptions7(9);
   },
   9: async () => {
-    await show('row-typing-a3-c7', 800); await delay(2400); hide('row-typing-a3-c7'); await show('row-audio3-c7', 80);
+    await showTyping('row-typing-a3-c7'); await delay(2400); hide('row-typing-a3-c7'); await show('row-audio3-c7', 80);
   }
 };
 
 async function afterAudio7_1() {
-  await show('row-typing-r2-c7', 800); await delay(2400); hide('row-typing-r2-c7'); await show('row-simon-r2-c7', 80);
-  await show('row-typing-q3-c7', 2800); await delay(2400); hide('row-typing-q3-c7'); await show('row-simon-q3-c7', 80);
+  await showTyping('row-typing-r2-c7'); await delay(2400); hide('row-typing-r2-c7'); await show('row-simon-r2-c7', 80);
+  await showTyping('row-typing-q3-c7'); await delay(2400); hide('row-typing-q3-c7'); await show('row-simon-q3-c7', 80);
   await delay(600); showOptions7(3);
 }
 
 async function afterAudio7_2() {
-  await show('row-typing-r4-c7', 800); await delay(2400); hide('row-typing-r4-c7'); await show('row-simon-r4-c7', 80);
-  await show('row-typing-q5-c7', 2800); await delay(2400); hide('row-typing-q5-c7'); await show('row-simon-q5-c7', 80);
+  await showTyping('row-typing-r4-c7'); await delay(2400); hide('row-typing-r4-c7'); await show('row-simon-r4-c7', 80);
+  await showTyping('row-typing-q5-c7'); await delay(2400); hide('row-typing-q5-c7'); await show('row-simon-q5-c7', 80);
   await delay(600); showOptions7(5);
 }
 
 async function afterAudio7_3() {
-  await show('row-typing-final-c7', 800); await delay(2400); hide('row-typing-final-c7'); await show('row-simon-final-c7', 80);
+  await showTyping('row-typing-final-c7'); await delay(2400); hide('row-typing-final-c7'); await show('row-simon-final-c7', 80);
   await startDiapo39Sequence();
 }
 
 // ── Sequence Diapo39 ──────────────────────────────────────────────────────────
 async function startDiapo39Sequence() {
-  await show('row-typing-res-diapo39', 1200);
+  await showTyping('row-typing-res-diapo39');
   await delay(1800); hide('row-typing-res-diapo39');
   document.getElementById('diapo39Iframe').src = 'Tareas/Fill the gap/Diapo39/index6.html';
   await show('row-simon-res-diapo39', 80);
@@ -3361,30 +3372,30 @@ function selectOption8(n, card) {
 
 const optionCallbacks8 = {
   1: async () => {
-    await show('row-typing-r1-c8', 800); await delay(2400); hide('row-typing-r1-c8'); await show('row-simon-r1-c8', 80);
-    await show('row-typing-r1b-c8', 2800); await delay(2400); hide('row-typing-r1b-c8'); await show('row-simon-r1b-c8', 80);
-    await show('row-typing-q2-c8', 2800); await delay(2200); hide('row-typing-q2-c8'); await show('row-simon-q2-c8', 80);
+    await showTyping('row-typing-r1-c8'); await delay(2400); hide('row-typing-r1-c8'); await show('row-simon-r1-c8', 80);
+    await showTyping('row-typing-r1b-c8'); await delay(2400); hide('row-typing-r1b-c8'); await show('row-simon-r1b-c8', 80);
+    await showTyping('row-typing-q2-c8'); await delay(2200); hide('row-typing-q2-c8'); await show('row-simon-q2-c8', 80);
     await delay(600); showOptions8(2);
   },
   2: async () => {
-    await show('row-typing-r2-c8', 800); await delay(2400); hide('row-typing-r2-c8'); await show('row-simon-r2-c8', 80);
-    await show('row-typing-q3-c8', 2800); await delay(2200); hide('row-typing-q3-c8'); await show('row-simon-q3-c8', 80);
+    await showTyping('row-typing-r2-c8'); await delay(2400); hide('row-typing-r2-c8'); await show('row-simon-r2-c8', 80);
+    await showTyping('row-typing-q3-c8'); await delay(2200); hide('row-typing-q3-c8'); await show('row-simon-q3-c8', 80);
     await delay(600); showOptions8(3);
   },
   3: async () => {
-    await show('row-typing-r3a-c8', 800); await delay(2400); hide('row-typing-r3a-c8'); await show('row-simon-r3a-c8', 80);
-    await show('row-typing-r3b-c8', 2800); await delay(2400); hide('row-typing-r3b-c8'); await show('row-simon-r3b-c8', 80);
-    await show('row-typing-q4-c8', 2800); await delay(2200); hide('row-typing-q4-c8'); await show('row-simon-q4-c8', 80);
+    await showTyping('row-typing-r3a-c8'); await delay(2400); hide('row-typing-r3a-c8'); await show('row-simon-r3a-c8', 80);
+    await showTyping('row-typing-r3b-c8'); await delay(2400); hide('row-typing-r3b-c8'); await show('row-simon-r3b-c8', 80);
+    await showTyping('row-typing-q4-c8'); await delay(2200); hide('row-typing-q4-c8'); await show('row-simon-q4-c8', 80);
     await delay(600); showOptions8(4);
   },
   4: async () => {
-    await show('row-typing-audio-c8', 800); await delay(2400); hide('row-typing-audio-c8'); await show('row-audio-c8', 80);
+    await showTyping('row-typing-audio-c8'); await delay(2400); hide('row-typing-audio-c8'); await show('row-audio-c8', 80);
   }
 };
 
 // ── Sequence 3-Tareas (07c → 07 → 07b) ───────────────────────────────────────
 async function startTarea07cSequence() {
-  await show('row-typing-res-tarea07c', 1200);
+  await showTyping('row-typing-res-tarea07c');
   await delay(1800); hide('row-typing-res-tarea07c');
   document.getElementById('tarea07cIframe').src = 'Tareas/Ordenar/Tarea07c.html';
   await show('row-simon-res-tarea07c', 80);
@@ -3473,7 +3484,7 @@ audio9.addEventListener('ended', () => {
 async function startChat9Sequence() {
   renderTranscript9(-1);
   await show('row-simon-q1-c9', 800);
-  await show('row-typing-q1b-c9', 2000); await delay(2200); hide('row-typing-q1b-c9'); await show('row-simon-q1b-c9', 80);
+  await showTyping('row-typing-q1b-c9'); await delay(2200); hide('row-typing-q1b-c9'); await show('row-simon-q1b-c9', 80);
   await delay(600); showOptions9(1);
 }
 
@@ -3491,18 +3502,18 @@ function selectOption9(n, card) {
 
 const optionCallbacks9 = {
   1: async () => {
-    await show('row-typing-r1-c9', 800); await delay(2400); hide('row-typing-r1-c9'); await show('row-simon-r1-c9', 80);
-    await show('row-typing-q2-c9', 2800); await delay(2200); hide('row-typing-q2-c9'); await show('row-simon-q2-c9', 80);
+    await showTyping('row-typing-r1-c9'); await delay(2400); hide('row-typing-r1-c9'); await show('row-simon-r1-c9', 80);
+    await showTyping('row-typing-q2-c9'); await delay(2200); hide('row-typing-q2-c9'); await show('row-simon-q2-c9', 80);
     await delay(600); showOptions9(2);
   },
   2: async () => {
-    await show('row-typing-audio-c9', 800); await delay(2400); hide('row-typing-audio-c9'); await show('row-audio-c9', 80);
+    await showTyping('row-typing-audio-c9'); await delay(2400); hide('row-typing-audio-c9'); await show('row-audio-c9', 80);
   }
 };
 
 // ── Sequence Tarea08b → Tarea08 ───────────────────────────────────────────────
 async function startTarea08bSequence() {
-  await show('row-typing-res-tarea08b', 1200);
+  await showTyping('row-typing-res-tarea08b');
   await delay(1800); hide('row-typing-res-tarea08b');
   document.getElementById('tarea08bIframe').src = 'Tareas/True or false/Diapo 51/Tarea08b_1.html';
   await show('row-simon-res-tarea08b', 80);
@@ -3619,7 +3630,7 @@ async function startChat10Sequence() {
 }
 
 async function afterAudio10_1() {
-  await show('row-typing-a2-c10', 800); await delay(2200); hide('row-typing-a2-c10'); await show('row-audio2-c10', 80);
+  await showTyping('row-typing-a2-c10'); await delay(2200); hide('row-typing-a2-c10'); await show('row-audio2-c10', 80);
 }
 
 
