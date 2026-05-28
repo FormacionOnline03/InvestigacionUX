@@ -1,0 +1,32 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3)",
+      "Bash(python3 -c ' *)",
+      "Bash(mkdir -p \"/Users/aliciagarcia/Downloads/InvestigacionUX/Backups\")",
+      "Bash(cp \"/Users/aliciagarcia/Downloads/InvestigacionUX/Parte1.html\" \"/Users/aliciagarcia/Downloads/InvestigacionUX/Backups/Parte1_backup_2026-05-27.html\")",
+      "Bash(cp \"/Users/aliciagarcia/Downloads/InvestigacionUX/Parte1.html\" \"/Users/aliciagarcia/Downloads/InvestigacionUX/Backups/Parte1_backup_2026-05-27_v2.html\" && ls -lh \"/Users/aliciagarcia/Downloads/InvestigacionUX/Backups/\")",
+      "Bash(python3 patch_chat9.py)",
+      "Bash(rm /Users/aliciagarcia/Downloads/InvestigacionUX/patch_chat9.py)",
+      "Bash(python3 /Users/aliciagarcia/Downloads/InvestigacionUX/patch_video.py)",
+      "Bash(sed -n '1659,1665p' /Users/aliciagarcia/Downloads/InvestigacionUX/Parte1.html)",
+      "Bash(sed -n '1895,1898p' /Users/aliciagarcia/Downloads/InvestigacionUX/Parte1.html)",
+      "Bash(sed -n '2100,2103p' /Users/aliciagarcia/Downloads/InvestigacionUX/Parte1.html)",
+      "Bash(sed -n '2245,2248p' /Users/aliciagarcia/Downloads/InvestigacionUX/Parte1.html)",
+      "Bash(sed -n '2336,2339p' /Users/aliciagarcia/Downloads/InvestigacionUX/Parte1.html)",
+      "Bash(awk -F: '{print $1\":\"$2}')",
+      "Bash(grep -n 'image-placeholder\\\\|aria-label\\\\|alt=\\\\|<h[1-6]\\\\|<title\\\\|section-title\\\\|card-title' /Users/aliciagarcia/Downloads/InvestigacionUX/__TRACKED_VAR__)",
+      "Bash(sed -n '126,152p' /Users/aliciagarcia/Downloads/InvestigacionUX/Tareas/drag-and-drop/Diapo6/tarea02.html)",
+      "Bash(sed -n '135,155p' /Users/aliciagarcia/Downloads/InvestigacionUX/Tareas/drag-and-drop/Diapo15/index.html)",
+      "Bash(sed -n '135,155p' \"/Users/aliciagarcia/Downloads/InvestigacionUX/Tareas/drag-and-drop/Diapo 20/index_1.html\")",
+      "Bash(grep -n \"FULLSCREEN\\\\|overlay\\\\|</div>\\\\s*$\\\\|</script>\\\\s*$\\\\|</body>\" /Users/aliciagarcia/Downloads/InvestigacionUX/Parte1.html)",
+      "Bash(python3 add_nav.py)",
+      "Bash(perl -i -pe 's|<div class=\"avatar\">S</div>|<div class=\"avatar\"><img src=\"imagenes/AvatarSimon.svg\" alt=\"Simón\"></div>|g' /Users/aliciagarcia/Downloads/InvestigacionUX/Parte1.html)",
+      "Bash(grep -E \"^[a-z]{4,}\")",
+      "Bash(grep -n \"color\\\\|#[0-9a-fA-F]\\\\{3,6\\\\}\" /Users/aliciagarcia/Downloads/InvestigacionUX/Parte1.html)"
+    ],
+    "additionalDirectories": [
+      "/Users/aliciagarcia/Downloads/InvestigacionUX"
+    ]
+  }
+}

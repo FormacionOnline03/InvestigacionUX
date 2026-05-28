@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Interpreta los datos antes de decidir</title>
+<style>
+  @font-face {
+    font-family: 'Balto-Bold';
+    src: url('../../fonts/Balto-Bold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'SF Pro Display';
+    src: url('../../fonts/sf-pro-display-regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'SF Pro Display';
+    src: url('../../fonts/sf-pro-display-bold.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+  }
+</style>
+<style>
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  :root {
+    --accent: #81f787;
+    --black: #000000;
+    --white: #ffffff;
+    --bg-panel: #f7f7f7;
+    --font-bold: 'Balto-Bold', Helvetica, sans-serif;
+    --font-body: 'SF Pro Display', Helvetica, sans-serif;
+    --sidebar-w: 34vw;
+    --sidebar-max: 580px;
+  }
+
+  html, body {
+    height: 100%;
+    background: var(--white);
+  }
+
+  /* ── LAYOUT ── */
+  .slide {
+    display: flex;
+    min-height: 100dvh;
+    width: 100%;
+  }
+
+  /* LEFT: fixed sidebar */
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: var(--sidebar-w);
+    max-width: var(--sidebar-max);
+    height: 100dvh;
+    background: var(--white);
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: clamp(2rem, 5vw, 4rem) clamp(1.5rem, 4vw, 3.5rem);
+    gap: clamp(1.5rem, 3vh, 3rem);
+    border-right: 1px solid #e8e8e8;
+  }
+
+  .section-title {
+    font-family: var(--font-bold);
+    font-weight: 800;
+    font-size: clamp(1.6rem, 3.2vw, 3.2rem);
+    line-height: 1.15;
+    color: var(--black);
+    position: relative;
+  }
+
+  .section-title::before {
+    content: '';
+    display: block;
+    width: clamp(40px, 6vw, 80px);
+    height: clamp(8px, 1.2vh, 16px);
+    background: var(--accent);
+    margin-bottom: 1.2rem;
+  }
+
+  .section-description-main {
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: clamp(0.85rem, 1.3vw, 2.05rem);
+    line-height: 1.65;
+    color: #333;
+  }
+
+  .scroll-hint {
+    font-family: var(--font-body);
+    font-weight: 500;
+    font-size: 1.2rem;
+    color: #888;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .scroll-hint::after {
+    content: '↓';
+    font-size: 1.1em;
+    animation: bounce 1.6s ease-in-out infinite;
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(5px); }
+  }
+
+  /* RIGHT: scrollable content */
+  .content-area {
+    margin-left: min(var(--sidebar-w), var(--sidebar-max));
+    flex: 1;
+    min-height: 100dvh;
+    overflow-y: auto;
+    background: var(--bg-panel);
+    padding: clamp(2rem, 5vw, 4rem) clamp(1.5rem, 4vw, 3rem);
+    display: flex;
+    flex-direction: column;
+    gap: clamp(3rem, 6vh, 5rem);
+  }
+
+  /* ── SECTION CARDS ── */
+  .data-section {
+    background: var(--white);
+    border-radius: 2px;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.55s ease, transform 0.55s ease;
+  }
+
+  .data-section.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .section-header {
+    position: relative;
+    padding: clamp(1.5rem, 3vh, 2.5rem) clamp(1.5rem, 3vw, 2.5rem);
+    border-bottom: 1px solid #eee;
+  }
+
+  .section-num-bar {
+    width: clamp(40px, 6vw, 80px);
+    height: clamp(6px, 1vh, 12px);
+    background: var(--accent);
+    margin-bottom: 1rem;
+  }
+
+  .section-heading {
+    font-family: var(--font-bold);
+    font-weight: 800;
+    font-size: clamp(1.3rem, 2.5vw, 2.2rem);
+    color: var(--black);
+    line-height: 1.2;
+  }
+
+  /* ── ANSWERS ── */
+  .answers-list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .answer-item {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: clamp(1rem, 3vw, 3rem);
+    padding: clamp(1.2rem, 2.5vh, 2rem) clamp(1.5rem, 3vw, 2.5rem);
+    border-bottom: 1px solid #f0f0f0;
+    align-items: start;
+  }
+
+  .answer-item:last-child {
+    border-bottom: none;
+  }
+
+  .answer-label {
+    font-family: var(--font-bold);
+    font-weight: 700;
+    font-size: clamp(0.85rem, 1.3vw, 2.05rem);
+    color: var(--black);
+    line-height: 1.4;
+    padding-top: 0.1em;
+  }
+
+  .answer-text {
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: clamp(0.85rem, 1.3vw, 2.05rem);
+    color: #1a1a1a;
+    line-height: 1.7;
+  }
+
+  /* ── MOBILE: stack layout ── */
+  @media (max-width: 768px) {
+    .slide {
+      flex-direction: column;
+    }
+
+    .sidebar {
+      position: relative;
+      width: 100%;
+      max-width: none;
+      height: auto;
+      min-height: auto;
+      border-right: none;
+      border-bottom: 3px solid var(--accent);
+      padding: 2rem 1.5rem;
+    }
+
+    .content-area {
+      margin-left: 0;
+      padding: 1.5rem 1rem;
+      gap: 2rem;
+    }
+
+    .answer-item {
+      grid-template-columns: 1fr;
+      gap: 0.4rem;
+    }
+
+    .answer-label {
+      font-size: 0.95rem;
+      color: #444;
+    }
+
+    .scroll-hint {
+      display: none;
+    }
+  }
+
+  @media (min-width: 769px) and (max-width: 1100px) {
+    :root {
+      --sidebar-w: 38vw;
+    }
+
+    .answer-item {
+      grid-template-columns: 1fr 1.5fr;
+    }
+  }
+</style>
+</head>
+<body>
+<main class="slide">
+
+  <!-- LEFT SIDEBAR -->
+  <aside class="sidebar" aria-labelledby="section-title">
+    <h1 class="section-title" id="section-title">Interpreta los datos antes de decidir</h1>
+    <p class="section-description-main">Simón ya ha recopilado algunos datos para que los reviséis juntos. El equipo tiene información de la analítica interna, el feedback de las personas usuarias y fuentes externas formales e informales. Pero estos datos no sirven de nada si no sabéis interpretarlos.</p>
+    <p class="scroll-hint">Desliza para ver los datos disponibles</p>
+  </aside>
+
+  <!-- RIGHT SCROLLABLE AREA -->
+  <section class="content-area" aria-label="Listado de datos disponibles">
+
+    <!-- 01 Analítica interna -->
+    <article class="data-section" aria-labelledby="q01-title">
+      <header class="section-header">
+        <div class="section-num-bar" aria-hidden="true"></div>
+        <h2 class="section-heading" id="q01-title">01 / Analítica interna</h2>
+      </header>
+      <div class="answers-list">
+        <div class="answer-item">
+          <h3 class="answer-label">Proceso de onboarding</h3>
+          <p class="answer-text">Existe una tasa del 65% de abandono en el último paso del onboarding para la funcionalidad de metas de ahorro.</p>
+        </div>
+        <div class="answer-item">
+          <h3 class="answer-label">Tiempo medio del onboarding</h3>
+          <p class="answer-text">El tiempo medio en el proceso de onboarding es de 35 segundos (más alto que en el resto del flujo).</p>
+        </div>
+        <div class="answer-item">
+          <h3 class="answer-label">Punto de abandono</h3>
+          <p class="answer-text">Se ha detectado un abandono pronunciado justo cuando el proceso requiere crear una lista de objetivos de ahorro con un campo obligatorio que le pide a la persona usuaria que describa con sus propias palabras qué acciones se compromete a realizar a corto, mediano y largo plazo para alcanzar sus metas.</p>
+        </div>
+      </div>
+    </article>
+
+    <!-- 02 Feedback de usuarios -->
+    <article class="data-section" aria-labelledby="q02-title">
+      <header class="section-header">
+        <div class="section-num-bar" aria-hidden="true"></div>
+        <h2 class="section-heading" id="q02-title">02 / Feedback de usuarios</h2>
+      </header>
+      <div class="answers-list">
+        <div class="answer-item">
+          <h3 class="answer-label">Utilidad</h3>
+          <p class="answer-text">"No me queda claro para qué sirve esta funcionalidad."</p>
+        </div>
+        <div class="answer-item">
+          <h3 class="answer-label">Carga cognitiva</h3>
+          <p class="answer-text">"Me piden demasiada información para algo que debería ser más simple."</p>
+        </div>
+        <div class="answer-item">
+          <h3 class="answer-label">Confianza</h3>
+          <p class="answer-text">"No sé si mis datos están seguros."</p>
+        </div>
+      </div>
+    </article>
+
+    <!-- 03 Datos externos -->
+    <article class="data-section" aria-labelledby="q03-title">
+      <header class="section-header">
+        <div class="section-num-bar" aria-hidden="true"></div>
+        <h2 class="section-heading" id="q03-title">03 / Datos externos</h2>
+      </header>
+      <div class="answers-list">
+        <div class="answer-item">
+          <h3 class="answer-label">Flujos efectivos</h3>
+          <p class="answer-text">De acuerdo con estudios sobre el tema, en banca digital los flujos de onboarding más efectivos reducen campos y no piden datos innecesarios, refuerzan confianza con mensajes explícitos sobre el uso que se hará de la información y explican claramente el valor del producto.</p>
+        </div>
+      </div>
+    </article>
+
+  </section>
+</main>
+
+<script>
+  // Intersection Observer for scroll-reveal animations
+  const sections = document.querySelectorAll('.data-section');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 80);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.08 });
+
+  sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>

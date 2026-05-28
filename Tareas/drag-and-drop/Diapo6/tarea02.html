@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta charset="utf-8"/>
+<title>Tarea 02 – Matriz de Impacto e Incertidumbre</title>
+<style>
+@font-face {
+    font-family: 'BaltoBold';
+    src: url('../../../fonts/Balto-Bold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+  }
+</style>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --purple: #caaeff;
+    --gray: #e5e5e5;
+    --white: #ffffff;
+    --black: #000000;
+    --radius: 10px;
+    --font: 'SF Pro Display', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    --font-balto: 'BaltoBold', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  }
+
+  html, body {
+    height: 100%;
+    background: var(--white);
+    font-family: var(--font);
+    color: var(--black);
+    overflow: hidden;
+  }
+
+  /* ── SCREENS ── */
+  .screen {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    background: var(--white);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+  }
+
+  .screen.hidden {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(16px);
+  }
+
+  /* ── SHARED BUTTON ── */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--black);
+    color: var(--white);
+    border: none;
+    border-radius: var(--radius);
+    padding: 18px 32px;
+    font-size: 20px;
+    font-family: var(--font);
+    font-weight: 400;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    flex-shrink: 0;
+    align-self: flex-start;
+  }
+
+  .btn:hover {
+    background: #333;
+    transform: translateY(-4px);
+    box-shadow: 0 16px 40px rgba(0,0,0,0.25);
+  }
+
+  .btn svg {
+    width: 22px;
+    height: 22px;
+    flex-shrink: 0;
+  }
+
+  /* ════════════════════════════════
+     SCREEN 1 — INTRO
+  ════════════════════════════════ */
+  #screenIntro {
+    padding: 100px;
+    align-items: stretch;
+  }
+
+  .sidebar-intro {
+    width: 600px;
+    min-width: 600px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border-radius: 16px;
+    border: 1px solid #ebebeb;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .sidebar-intro-top {
+    padding: 40px 40px 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .sidebar-intro-bottom {
+    padding: 16px;
+  }
+
+  .sidebar-tag {
+    width: 60px;
+    height: 12px;
+    background: var(--purple);
+    border-radius: 2px;
+    margin-bottom: 28px;
+  }
+
+  .sidebar-label {
+    font-size: 24px;
+    font-weight: 400;
+    color: var(--black);
+    margin-bottom: 16px;
+  }
+
+  .sidebar-title {
+    font-family: var(--font-balto);
+    font-size: 38px;
+    font-weight: 700;
+    line-height: 1.1;
+  }
+
+  .intro-img {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+    border-radius: var(--radius);
+    display: block;
+  }
+
+  .intro-main {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 80px;
+    overflow: auto;
+  }
+
+  .intro-content {
+    max-width: 720px;
+    display: flex;
+    flex-direction: column;
+    gap: 100px;
+  }
+
+  .intro-text {
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 1.55;
+    color: var(--black);
+  }
+
+  .intro-text p + p { margin-top: 24px; }
+
+  /* ════════════════════════════════
+     SCREEN 2 — TASK
+  ════════════════════════════════ */
+  #screenTask {
+    align-items: stretch;
+  }
+
+  /* ── Sidebar task ── */
+  .sidebar-task {
+    width: 340px;
+    min-width: 340px;
+    padding: 64px 44px 44px;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid #f0f0f0;
+    flex-shrink: 0;
+    overflow: hidden;
+  }
+
+  .sidebar-desc {
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 1.6;
+    color: #444;
+    margin-top: 20px;
+  }
+
+  .sidebar-progress {
+    margin-top: auto;
+    padding-top: 32px;
+  }
+
+  .progress-label {
+    font-size: 13px;
+    color: #999;
+    margin-bottom: 10px;
+  }
+
+  .progress-bar {
+    height: 4px;
+    background: #eee;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--purple);
+    border-radius: 2px;
+    width: 0%;
+    transition: width 0.4s ease;
+  }
+
+  .progress-count {
+    margin-top: 8px;
+    font-size: 13px;
+    color: #999;
+  }
+
+  /* ── Task main ── */
+  .task-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 40px 56px 40px 56px;
+    gap: 32px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+    transition: scrollbar-color 0.2s;
+  }
+
+  .task-main:hover {
+    scrollbar-color: rgba(0,0,0,0.15) transparent;
+  }
+
+  .task-main::-webkit-scrollbar { width: 4px; }
+  .task-main::-webkit-scrollbar-track { background: transparent; }
+  .task-main::-webkit-scrollbar-thumb { background: transparent; border-radius: 4px; }
+  .task-main:hover::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); }
+
+  /* ── BLOCK X: Cards grid ── */
+  .block-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    flex-shrink: 0;
+  }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--gray);
+    border-radius: var(--radius);
+    padding: 20px 22px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    cursor: grab;
+    user-select: none;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.2s ease;
+    min-height: 90px;
+  }
+
+  .card:active { cursor: grabbing; }
+  .card.dragging { opacity: 0.4; transform: scale(0.98); }
+  .card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+  .card.used { display: none; }
+
+  .card-text {
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 1.4;
+    flex: 1;
+  }
+
+  .card-icon {
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .card-icon svg {
+    width: 36px !important;
+    height: 36px !important;
+    display: block;
+  }
+
+  /* ── BLOCK Y: Matrix wrapper ── */
+  .block-matrix-wrap {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 0;
+    gap: 0;
+  }
+
+  .matrix-label-top {
+    font-size: 24px;
+    font-family: var(--font-balto);
+    font-weight: 700;
+    color: var(--black);
+    text-align: center;
+    padding-bottom: 10px;
+    flex-shrink: 0;
+  }
+
+  .matrix-middle {
+    flex: 1;
+    display: flex;
+    align-items: stretch;
+    width: 100%;
+    min-height: 0;
+    gap: 0;
+  }
+
+  .matrix-label-side {
+    font-size: 24px;
+    font-family: var(--font-balto);
+    font-weight: 700;
+    color: var(--black);
+    writing-mode: horizontal-tb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 80px;
+    text-align: center;
+    line-height: 1.3;
+  }
+
+  .matrix-grid {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    min-height: 0;
+    position: relative;
+  }
+
+  /* crosshair lines */
+  .matrix-grid::before,
+  .matrix-grid::after {
+    content: '';
+    position: absolute;
+    background: rgba(0,0,0,0.15);
+    z-index: 1;
+    pointer-events: none;
+  }
+  .matrix-grid::before {
+    width: 1px;
+    top: 0; bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  .matrix-grid::after {
+    height: 1px;
+    left: 0; right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .matrix-label-bottom {
+    font-size: 24px;
+    font-family: var(--font-balto);
+    font-weight: 700;
+    color: var(--black);
+    text-align: center;
+    padding-top: 10px;
+    flex-shrink: 0;
+  }
+
+  /* ── DROP ZONES (quadrants) ── */
+  .quadrant {
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    transition: background 0.15s, box-shadow 0.15s;
+    background: rgba(202,174,255,0.10);
+    min-height: 0;
+    overflow-y: auto;
+    scrollbar-width: none;
+  }
+
+  .quadrant::-webkit-scrollbar { display: none; }
+
+  .quadrant.over {
+    background: rgba(202,174,255,0.38);
+    box-shadow: inset 0 0 0 2px var(--purple);
+  }
+
+  .quadrant.has-cards {
+    background: rgba(202,174,255,0.14);
+  }
+
+  .quadrant.incorrect {
+    background: #ffd6d6;
+    box-shadow: inset 0 0 0 2px #ff7070;
+    animation: shake 0.35s ease;
+  }
+
+  @keyframes shake {
+    0%,100% { transform: translateX(0); }
+    25%      { transform: translateX(-6px); }
+    75%      { transform: translateX(6px); }
+  }
+
+  /* placed card inside quadrant */
+  .placed-card {
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 1.4;
+    color: var(--black);
+    background: rgba(255,255,255,0.7);
+    border-radius: 6px;
+    padding: 8px 12px;
+    width: 100%;
+    flex-shrink: 0;
+  }
+
+  .placed-card.correct-flash {
+    animation: correctFlash 0.35s ease;
+  }
+
+  @keyframes correctFlash {
+    0%,100% { transform: translateX(0); background: rgba(255,255,255,0.7); }
+    25%     { transform: translateX(-6px); background: #b8f5d0; box-shadow: 0 0 0 2px #52d68a; }
+    75%     { transform: translateX(6px);  background: #b8f5d0; box-shadow: 0 0 0 2px #52d68a; }
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 1400px) {
+    .sidebar-intro { width: 480px; min-width: 480px; }
+    .sidebar-task { width: 300px; min-width: 300px; padding: 48px 32px 32px; }
+    .sidebar-title { font-size: 32px; }
+    #screenIntro { padding: 60px; }
+    .intro-main { padding: 60px; }
+    .task-main { padding: 32px 40px; }
+  }
+
+  @media (max-width: 1280px) {
+    .sidebar-intro { width: 360px; min-width: 360px; }
+    .sidebar-task { width: 260px; min-width: 260px; padding: 40px 28px 28px; }
+    .sidebar-title { font-size: 28px; }
+    #screenIntro { padding: 40px; }
+    .intro-main { padding: 48px; }
+    .task-main { padding: 28px 32px; }
+    .block-cards { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (max-width: 900px) {
+    body { overflow: auto; }
+    .screen { position: relative; min-height: 100vh; flex-direction: column; }
+    .screen.hidden { display: none; }
+    #screenIntro { padding: 24px; flex-direction: column; }
+    .sidebar-intro { width: 100%; min-width: unset; }
+    .intro-img { height: 200px; }
+    .intro-main { padding: 24px 20px; }
+    .intro-content { gap: 48px; }
+    .sidebar-task { width: 100%; min-width: unset; border-right: none; border-bottom: 1px solid #f0f0f0; }
+    .task-main { padding: 24px 20px; }
+    .block-cards { grid-template-columns: repeat(2, 1fr); }
+    .block-matrix { grid-template-columns: 1fr 1fr; min-height: 400px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════
+     SCREEN 1 · INTRO
+══════════════════════════════════════ -->
+<div class="screen" id="screenIntro">
+
+  <aside class="sidebar-intro">
+    <div class="sidebar-intro-top">
+      <div class="sidebar-tag"></div>
+      <div class="sidebar-label">Tarea 02</div>
+      <h1 class="sidebar-title">Toma decisiones con la matriz de impacto e incertidumbre</h1>
+    </div>
+    <div class="sidebar-intro-bottom">
+      <img class="intro-img" src="../../../imagenes/Diapo6/Imagen1.jpg" alt="" aria-hidden="true" />
+    </div>
+  </aside>
+
+  <main class="intro-main">
+    <div class="intro-content">
+      <div class="intro-text">
+        <p>Simón ha agendado el kick-off con los stakeholders de Mountain Bank. Hay varias iniciativas sobre la mesa y no pueden investigarse todas. Si no se prioriza bien, el equipo corre el riesgo de perder tiempo, recursos valiosos y credibilidad ante los demás.</p>
+      </div>
+      <button class="btn" id="startBtn">
+        Iniciar tarea
+        <svg viewBox="0 0 46 46" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="22.8082" cy="22.8082" r="22.5655" stroke="white" stroke-width="0.485281"/>
+          <path d="M17.4701 28.6316L28.6315 16.9848M28.6315 28.6316V16.9848H17.4701" stroke="white" stroke-width="2.4264"/>
+        </svg>
+      </button>
+    </div>
+  </main>
+
+</div>
+
+<!-- ══════════════════════════════════════
+     SCREEN 2 · TASK
+══════════════════════════════════════ -->
+<div class="screen hidden" id="screenTask">
+
+  <aside class="sidebar-task">
+    <div class="sidebar-tag"></div>
+    <div class="sidebar-label">Tarea 02</div>
+    <h1 class="sidebar-title">Toma decisiones con la matriz de impacto e incertidumbre</h1>
+    <p class="sidebar-desc">Tu siguiente tarea consiste en evaluar cada caso y analizar el nivel de incertidumbre y el impacto que tiene. Cuando termines tu análisis, debes arrastrar el recuadro al lugar correcto de la matriz.</p>
+    <div class="sidebar-progress">
+      <div class="progress-label">Progreso</div>
+      <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+      <div class="progress-count" id="progressCount">0 de 6 completadas</div>
+    </div>
+    <button class="btn" id="resetBtn" style="margin-top: 28px;">↺ Reiniciar</button>
+  </aside>
+
+  <main class="task-main">
+
+    <!-- BLOCK X: iniciativas -->
+    <div class="block-cards" id="blockCards"></div>
+
+    <!-- BLOCK Y: matriz 2×2 -->
+    <div class="block-matrix-wrap">
+
+      <div class="matrix-label-top">Incertidumbre alta</div>
+
+      <div class="matrix-middle">
+        <div class="matrix-label-side">Impacto<br>bajo</div>
+
+        <div class="matrix-grid">
+          <div class="quadrant" data-zone="hi-li" id="zone-hi-li"></div>
+          <div class="quadrant" data-zone="hi-hi" id="zone-hi-hi"></div>
+          <div class="quadrant" data-zone="li-li" id="zone-li-li"></div>
+          <div class="quadrant" data-zone="li-hi" id="zone-li-hi"></div>
+        </div>
+
+        <div class="matrix-label-side">Impacto<br>alto</div>
+      </div>
+
+      <div class="matrix-label-bottom">Incertidumbre baja</div>
+
+    </div>
+
+  </main>
+</div>
+
+<script>
+const BUTTON_SVG = `<svg viewBox="0 0 46 46" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:36px;height:36px;display:block"><circle cx="22.8082" cy="22.8082" r="22.5655" stroke="black" stroke-width="0.485281"/><path d="M17.4701 28.6316L28.6315 16.9848M28.6315 28.6316V16.9848H17.4701" stroke="black" stroke-width="2.4264"/></svg>`;
+
+// card id → correct zone
+const ALL_CARDS = [
+  { id: 'c1', text: 'Saber por qué las personas usuarias no utilizan la nueva funcionalidad para gestionar sus metas de ahorro.',       zone: 'hi-hi' },
+  { id: 'c2', text: 'Cambiar el texto de un botón secundario para que en lugar de "Transferir" ponga "Enviar".',                       zone: 'li-li' },
+  { id: 'c3', text: 'Desarrollar un test rápido de dos copies para una campaña interna.',                                              zone: 'hi-li' },
+  { id: 'c4', text: 'Saber por qué hay una tasa alta de abandono en el proceso del onboarding a la nueva funcionalidad de gestión de ahorro.', zone: 'hi-hi' },
+  { id: 'c5', text: 'Implementar un patrón estándar para mostrar u ocultar la contraseña al iniciar sesión en la app.',               zone: 'li-hi' },
+  { id: 'c6', text: 'Rediseñar el flujo completo para crear huchas virtuales para separar dinero que la persona usuaria quiere ahorrar para metas específicas.', zone: 'hi-hi' },
+];
+
+let draggedCard = null;
+let placedCount = 0;
+
+/* ── Transition ── */
+document.getElementById('startBtn').addEventListener('click', () => {
+  document.getElementById('screenIntro').classList.add('hidden');
+  document.getElementById('screenTask').classList.remove('hidden');
+  renderCards();
+  attachZoneListeners();
+  updateProgress();
+});
+
+/* ── Reset ── */
+document.getElementById('resetBtn').addEventListener('click', () => {
+  placedCount = 0;
+  document.querySelectorAll('.quadrant').forEach(q => {
+    q.querySelectorAll('.placed-card').forEach(p => p.remove());
+    q.classList.remove('has-cards', 'incorrect');
+  });
+  renderCards();
+  updateProgress();
+});
+
+/* ── Render cards grid ── */
+function renderCards() {
+  const block = document.getElementById('blockCards');
+  block.innerHTML = '';
+  ALL_CARDS.forEach(item => {
+    const div = document.createElement('div');
+    div.className = 'card';
+    div.draggable = true;
+    div.dataset.id = item.id;
+    div.innerHTML = `<span class="card-text">${item.text}</span><span class="card-icon">${BUTTON_SVG}</span>`;
+    div.addEventListener('dragstart', e => {
+      draggedCard = div;
+      setTimeout(() => div.classList.add('dragging'), 0);
+      e.dataTransfer.effectAllowed = 'move';
+    });
+    div.addEventListener('dragend', () => {
+      div.classList.remove('dragging');
+      draggedCard = null;
+    });
+    block.appendChild(div);
+  });
+}
+
+/* ── Zone listeners ── */
+function attachZoneListeners() {
+  document.querySelectorAll('.quadrant').forEach(zone => {
+    zone.addEventListener('dragover', e => {
+      e.preventDefault();
+      zone.classList.add('over');
+    });
+    zone.addEventListener('dragleave', () => zone.classList.remove('over'));
+    zone.addEventListener('drop', e => {
+      e.preventDefault();
+      zone.classList.remove('over');
+      if (!draggedCard) return;
+
+      const cardId   = draggedCard.dataset.id;
+      const cardObj  = ALL_CARDS.find(c => c.id === cardId);
+      const zoneName = zone.dataset.zone;
+
+      if (cardObj.zone === zoneName) {
+        // ✅ correct
+        const placed = document.createElement('div');
+        placed.className = 'placed-card';
+        placed.textContent = cardObj.text;
+        zone.appendChild(placed);
+        zone.classList.add('has-cards');
+        draggedCard.remove();
+        placedCount++;
+        requestAnimationFrame(() => placed.classList.add('correct-flash'));
+        updateProgress();
+      } else {
+        // ❌ incorrect
+        zone.classList.add('incorrect');
+        setTimeout(() => zone.classList.remove('incorrect'), 400);
+      }
+    });
+  });
+}
+
+/* ── Progress ── */
+function updateProgress() {
+  const total = ALL_CARDS.length;
+  document.getElementById('progressFill').style.width = (placedCount / total * 100) + '%';
+  document.getElementById('progressCount').textContent = placedCount + ' de ' + total + ' completadas';
+}
+</script>
+</body>
+</html>

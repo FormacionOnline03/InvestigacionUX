@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>¿Qué sabes hasta ahora?</title>
+<style>
+  @font-face {
+    font-family: 'Balto-Bold';
+    src: url('../../fonts/Balto-Bold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'SF Pro Display';
+    src: url('../../fonts/sf-pro-display-regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  :root {
+    --accent: #81f787;
+    --black: #000000;
+    --white: #ffffff;
+    --bg-panel: #f7f7f7;
+    --font-bold: 'Balto-Bold', Helvetica, sans-serif;
+    --font-body: 'SF Pro Display', Helvetica, sans-serif;
+  }
+
+  html, body {
+    min-height: 100%;
+    background: var(--white);
+  }
+
+  /* ── LAYOUT ── */
+  .slide {
+    display: flex;
+    flex-direction: column;
+    min-height: 100dvh;
+    width: 100%;
+  }
+
+  /* ── HEADER ── */
+  .container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(1.5rem, 4vw, 3rem);
+    padding: clamp(2rem, 5vw, 3.5rem) clamp(2rem, 5vw, 3.5rem);
+    background: var(--white);
+    border-bottom: 1px solid #e8e8e8;
+  }
+
+  .section-title {
+    font-family: var(--font-bold);
+    font-weight: 700;
+    font-size: clamp(1.6rem, 3.5vw, 3.4rem);
+    line-height: 1.2;
+    color: var(--black);
+  }
+
+  .text-wrapper {
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: clamp(0.95rem, 1.5vw, 2.2rem);
+    line-height: 1.65;
+    color: var(--black);
+  }
+
+  /* ── CARDS GRID ── */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(1rem, 2vw, 1.5rem);
+    padding: clamp(1.5rem, 4vw, 3rem) clamp(2rem, 5vw, 3.5rem);
+    flex: 1;
+  }
+
+  /* ── CARD ── */
+  .card {
+    background: var(--bg-panel);
+    padding: clamp(1.5rem, 3vw, 2.5rem);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: clamp(1.5rem, 3vh, 2.5rem);
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+
+  .card.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .card-top {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(1rem, 2vh, 1.5rem);
+  }
+
+  .question-container {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.75rem, 1.5vh, 1.2rem);
+  }
+
+  .highlight-bar {
+    width: clamp(50px, 7vw, 103px);
+    height: clamp(10px, 1.5vh, 20px);
+    background: var(--accent);
+    flex-shrink: 0;
+  }
+
+  .question {
+    font-family: var(--font-bold);
+    font-weight: 700;
+    font-size: clamp(1.2rem, 2.5vw, 2.5rem);
+    line-height: 1.35;
+    color: var(--black);
+  }
+
+  .answers-container .text-wrapper {
+    font-size: clamp(0.85rem, 1.2vw, 2rem);
+    line-height: 1.65;
+  }
+
+  /* ── CARD ICON 146×146 ── */
+  .card-icon {
+    width: 146px;
+    height: 146px;
+    flex-shrink: 0;
+    object-fit: contain;
+  }
+
+  /* ── TABLET ── */
+  @media (max-width: 1024px) {
+    .cards-grid {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+
+    .card {
+      flex-direction: row;
+      align-items: flex-start;
+    }
+
+    .card-top {
+      flex: 1;
+    }
+
+    .card-icon {
+      width: 120px;
+      height: 120px;
+    }
+  }
+
+  /* ── MOBILE ── */
+  @media (max-width: 640px) {
+    .container {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+      padding: 1.5rem;
+    }
+
+    .cards-grid {
+      padding: 1rem 1rem 2rem;
+    }
+
+    .card {
+      flex-direction: column;
+    }
+
+    .card-icon {
+      width: 100px;
+      height: 100px;
+    }
+  }
+</style>
+</head>
+<body>
+<main class="slide">
+
+  <!-- HEADER -->
+  <header class="container">
+    <h1 class="section-title">¿Qué sabes hasta ahora?</h1>
+    <div class="frame">
+      <p class="text-wrapper">Antes de continuar, Simón te propone repasar todo lo que han descubierto desde que comenzaron este proceso.</p>
+    </div>
+  </header>
+
+  <!-- CARDS -->
+  <div class="cards-grid">
+
+    <!-- 01 -->
+    <article class="card" aria-labelledby="question-01-title">
+      <div class="card-top">
+        <div class="question-container">
+          <div class="highlight-bar" aria-hidden="true"></div>
+          <h2 class="question" id="question-01-title">01/</h2>
+        </div>
+        <div class="answers-container">
+          <p class="text-wrapper">Existe un alto abandono en el último paso del proceso de onboarding de la funcionalidad para establecer, gestionar y seguir metas de ahorro.</p>
+        </div>
+      </div>
+      <img class="card-icon" src="../../imagenes/Diapo26/01-share-square-solid.svg" alt="" aria-hidden="true" />
+    </article>
+
+    <!-- 02 -->
+    <article class="card" aria-labelledby="question-02-title">
+      <div class="card-top">
+        <div class="question-container">
+          <div class="highlight-bar" aria-hidden="true"></div>
+          <h2 class="question" id="question-02-title">02/</h2>
+        </div>
+        <div class="answers-container">
+          <p class="text-wrapper">El equipo quiere entender cómo perciben las personas usuarias la información solicitada, qué dudas, fricciones o barreras aparecen durante la experiencia y cómo influyen en la decisión de continuar o abandonar el proceso de onboarding.</p>
+        </div>
+      </div>
+      <img class="card-icon" src="../../imagenes/Diapo26/02-clipboard-list-solid.svg" alt="" aria-hidden="true" />
+    </article>
+
+    <!-- 03 -->
+    <article class="card" aria-labelledby="question-03-title">
+      <div class="card-top">
+        <div class="question-container">
+          <div class="highlight-bar" aria-hidden="true"></div>
+          <h2 class="question" id="question-03-title">03/</h2>
+        </div>
+        <div class="answers-container">
+          <p class="text-wrapper">La hipótesis que el equipo quiere validar es que las personas usuarias abandonan el proceso de onboarding porque la aplicación solicita información innecesaria sobre las acciones que tomarán a corto, mediano y largo plazo para alcanzar sus objetivos de ahorro, lo cual genera fricción, desmotivación y pérdida de interés.</p>
+        </div>
+      </div>
+      <img class="card-icon" src="../../imagenes/Diapo26/03-clone-solid.svg" alt="" aria-hidden="true" />
+    </article>
+
+  </div>
+</main>
+
+<script>
+  const cards = document.querySelectorAll('.card');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 120);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  cards.forEach(c => observer.observe(c));
+</script>
+</body>
+</html>

@@ -1,0 +1,339 @@
+.slide {
+  background-color: #ffffff;
+  width: 100%;
+  min-width: 1920px;
+  min-height: 1080px;
+  display: flex;
+  gap: 16px;
+}
+
+.slide .container {
+  display: flex;
+  width: 634px;
+  height: 1080px;
+  position: relative;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 50px;
+  background-color: #ffffff;
+}
+
+.slide .section-title {
+  font-family: "Balto-Bold", Helvetica;
+  font-weight: 700;
+  font-size: 55px;
+  line-height: 74.3px;
+  position: relative;
+  align-self: stretch;
+  margin-top: -1px;
+  color: #000000;
+  letter-spacing: 0;
+}
+
+.slide .frame {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 50px;
+  position: relative;
+  align-self: stretch;
+  width: 100%;
+  flex: 0 0 auto;
+}
+
+.slide .section-description {
+  font-family: "SF Pro Display-Regular", Helvetica;
+  font-weight: 400;
+  font-size: 32px;
+  line-height: 43.2px;
+  position: relative;
+  align-self: stretch;
+  margin-top: -1px;
+  color: #000000;
+  letter-spacing: 0;
+}
+
+.slide .div {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 45px;
+  position: relative;
+  align-self: stretch;
+  width: 100%;
+  flex: 0 0 auto;
+}
+
+.slide .frame-2 {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 30px;
+  position: relative;
+  align-self: stretch;
+  width: 100%;
+  flex: 0 0 auto;
+}
+
+.slide .highlight-bar {
+  position: relative;
+  width: 103px;
+  height: 20px;
+  background-color: #81f787;
+}
+
+.slide .question {
+  position: relative;
+  align-self: stretch;
+  font-family: "Balto-Bold", Helvetica;
+  font-weight: 700;
+  color: #000000;
+  font-size: 30px;
+  letter-spacing: 0;
+  line-height: 40.5px;
+}
+
+.slide .container-wrapper {
+  display: flex;
+  margin-top: 39px;
+  width: 481px;
+  height: 1001px;
+  position: relative;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 21px;
+  padding: 36px;
+  background-color: #f7f7f7;
+}
+
+.slide .container-2 {
+  display: flex;
+  flex-direction: column;
+  height: 929px;
+  align-items: flex-start;
+  justify-content: space-between;
+  position: relative;
+  align-self: stretch;
+  width: 100%;
+}
+
+.slide .frame-3 {
+  position: relative;
+  width: 409px;
+  height: 161px;
+}
+
+.slide .highlight-bar-2 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 103px;
+  height: 20px;
+  background-color: #81f787;
+}
+
+.slide .text-wrapper {
+  position: absolute;
+  top: 53px;
+  left: 0;
+  width: 409px;
+  font-family: "Balto-Bold", Helvetica;
+  font-weight: 700;
+  color: #000000;
+  font-size: 40px;
+  letter-spacing: 0;
+  line-height: 54px;
+}
+
+.slide .frame-4 {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 69px;
+  position: relative;
+  align-self: stretch;
+  width: 100%;
+  flex: 0 0 auto;
+}
+
+.slide .detailed-explanation {
+  width: 409px;
+  margin-top: -1px;
+  font-family: "SF Pro Display-Bold", Helvetica;
+  font-weight: 400;
+  position: relative;
+  color: #000000;
+  font-size: 32px;
+  letter-spacing: 0;
+  line-height: 43.2px;
+}
+
+.slide .span {
+  font-weight: 700;
+}
+
+.slide .text-wrapper-2 {
+  font-family: "SF Pro Display-Regular", Helvetica;
+}
+
+.slide .p {
+  position: relative;
+  width: 409px;
+  font-family: "SF Pro Display-Bold", Helvetica;
+  font-weight: 400;
+  color: #000000;
+  font-size: 32px;
+  letter-spacing: 0;
+  line-height: 43.2px;
+}
+
+.slide .frame-5 {
+  display: flex;
+  margin-top: 39px;
+  width: 738px;
+  height: 1001px;
+  position: relative;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 60px;
+  padding: 36px;
+  background-color: #f7f7f7;
+}
+
+.slide .detailed-explanation-2 {
+  align-self: stretch;
+  margin-top: -1px;
+  font-family: "SF Pro Display-Bold", Helvetica;
+  font-weight: 700;
+  position: relative;
+  color: #000000;
+  font-size: 32px;
+  letter-spacing: 0;
+  line-height: 43.2px;
+}
+
+.slide .frame-6 {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 21px;
+  position: relative;
+  align-self: stretch;
+  width: 100%;
+  flex: 0 0 auto;
+}
+
+.slide .frame-7 {
+  display: inline-flex;
+  align-items: center;
+  gap: 13px;
+  position: relative;
+  flex: 0 0 auto;
+}
+
+.slide .highlight-bar-3 {
+  position: relative;
+  width: 15px;
+  height: 15px;
+  background-color: #81f787;
+}
+
+.slide .detailed-explanation-3 {
+  width: fit-content;
+  margin-top: -1px;
+  font-family: "SF Pro Display-Regular", Helvetica;
+  font-weight: 400;
+  white-space: nowrap;
+  position: relative;
+  color: #000000;
+  font-size: 32px;
+  letter-spacing: 0;
+  line-height: 43.2px;
+}
+
+.slide .frame-8 {
+  display: flex;
+  align-self: stretch;
+  width: 100%;
+  align-items: center;
+  gap: 13px;
+  position: relative;
+  flex: 0 0 auto;
+}
+
+.slide .detailed-explanation-4 {
+  flex: 1;
+  margin-top: -1px;
+  font-family: "SF Pro Display-Regular", Helvetica;
+  font-weight: 400;
+  position: relative;
+  color: #000000;
+  font-size: 32px;
+  letter-spacing: 0;
+  line-height: 43.2px;
+}
+
+.slide .detailed-explanation-5 {
+  align-self: stretch;
+  font-family: "SF Pro Display-Regular", Helvetica;
+  font-weight: 400;
+  position: relative;
+  color: #000000;
+  font-size: 32px;
+  letter-spacing: 0;
+  line-height: 43.2px;
+}
+/* Inject the original CSS code above */
+
+body {
+  background-color: #ffffff;
+}
+
+.slide {
+  align-items: flex-start;
+}
+
+.slide .section-title,
+.slide .section-description,
+.slide .question,
+.slide .detailed-explanation,
+.slide .p,
+.slide .detailed-explanation-2,
+.slide .detailed-explanation-3,
+.slide .detailed-explanation-4,
+.slide .detailed-explanation-5,
+.slide .text-wrapper {
+  margin: 0;
+}
+
+.slide .container,
+.slide .container-wrapper,
+.slide .frame-5 {
+  min-height: 1001px;
+}
+
+.slide .container {
+  height: auto;
+}
+
+.slide .container-wrapper,
+.slide .frame-5 {
+  height: auto;
+}
+
+.slide .frame-3 {
+  width: 100%;
+}
+
+.slide .text-wrapper,
+.slide .detailed-explanation,
+.slide .p {
+  width: 100%;
+}
+
+@media (max-width: 1919px) {
+  .slide {
+    min-width: 1920px;
+  }
+}

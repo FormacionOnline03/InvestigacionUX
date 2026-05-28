@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta charset="utf-8"/>
+<title>Tarea 01 – Proceso de Investigación</title>
+<style>
+@font-face {
+    font-family: 'BaltoBold';
+    src: url('../../../fonts/Balto-Bold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+  }
+</style>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --purple: #caaeff;
+    --gray: #e5e5e5;
+    --white: #ffffff;
+    --black: #000000;
+    --radius: 10px;
+    --font: 'SF Pro Display', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    --font-balto: 'BaltoBold', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  }
+
+  html, body {
+    height: 100%;
+    background: var(--white);
+    font-family: var(--font);
+    color: var(--black);
+    overflow: hidden;
+  }
+
+  /* ════════════════════════════════
+     SCREENS
+  ════════════════════════════════ */
+  .screen {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    background: var(--white);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+  }
+
+  .screen.hidden {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(16px);
+  }
+
+  /* ════════════════════════════════
+     SHARED BUTTON
+  ════════════════════════════════ */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--black);
+    color: var(--white);
+    border: none;
+    border-radius: var(--radius);
+    padding: 18px 32px;
+    font-size: 20px;
+    font-family: var(--font);
+    font-weight: 400;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    flex-shrink: 0;
+    align-self: flex-start;
+  }
+
+  .btn:hover {
+    background: #333;
+    transform: translateY(-4px);
+    box-shadow: 0 16px 40px rgba(0,0,0,0.25);
+  }
+
+  .btn svg {
+    width: 22px;
+    height: 22px;
+    flex-shrink: 0;
+  }
+
+  /* ════════════════════════════════
+     SCREEN 1 — INTRO
+  ════════════════════════════════ */
+  #screenIntro {
+    padding: 100px;
+    gap: 0;
+    align-items: stretch;
+  }
+
+  /* Sidebar intro */
+  .sidebar-intro {
+    width: 600px;
+    min-width: 600px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border-radius: 16px;
+    border: 1px solid #ebebeb;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .sidebar-intro-top {
+    padding: 40px 40px 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .sidebar-intro-bottom {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .sidebar-tag {
+    width: 60px;
+    height: 12px;
+    background: var(--purple);
+    border-radius: 2px;
+    margin-bottom: 28px;
+  }
+
+  .sidebar-label {
+    font-size: 24px;
+    font-weight: 400;
+    color: var(--black);
+    margin-bottom: 16px;
+    letter-spacing: 0.01em;
+  }
+
+  .sidebar-title {
+    font-family: var(--font-balto);
+    font-size: 38px;
+    font-weight: 700;
+    line-height: 1.1;
+  }
+
+  .intro-img {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+    border-radius: var(--radius);
+    display: block;
+  }
+
+  /* Intro main */
+  .intro-main {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 80px;
+    overflow: auto;
+  }
+
+  .intro-content {
+    max-width: 720px;
+    display: flex;
+    flex-direction: column;
+    gap: 100px;
+  }
+
+  .intro-text {
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 1.55;
+    color: var(--black);
+  }
+
+  .intro-text p + p {
+    margin-top: 24px;
+  }
+
+  /* ════════════════════════════════
+     SCREEN 2 — TASK
+  ════════════════════════════════ */
+  #screenTask {
+    align-items: stretch;
+  }
+
+  /* Sidebar task */
+  .sidebar-task {
+    width: 340px;
+    min-width: 340px;
+    padding: 64px 44px 44px;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid #f0f0f0;
+    flex-shrink: 0;
+    overflow: hidden;
+  }
+
+  .sidebar-desc {
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 1.6;
+    color: #444;
+    margin-top: 20px;
+  }
+
+  .sidebar-progress {
+    margin-top: auto;
+    padding-top: 32px;
+  }
+
+  .progress-label {
+    font-size: 13px;
+    color: #999;
+    margin-bottom: 10px;
+  }
+
+  .progress-bar {
+    height: 4px;
+    background: #eee;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--purple);
+    border-radius: 2px;
+    width: 0%;
+    transition: width 0.4s ease;
+  }
+
+  .progress-count {
+    margin-top: 8px;
+    font-size: 13px;
+    color: #999;
+  }
+
+  /* Task main */
+  .task-main {
+    flex: 1;
+    display: flex;
+    gap: 0;
+    padding: 0 56px 48px;
+    overflow-y: auto;
+    align-items: flex-start;
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+    transition: scrollbar-color 0.2s;
+  }
+
+  .task-main:hover {
+    scrollbar-color: rgba(0,0,0,0.15) transparent;
+  }
+
+  .task-main::-webkit-scrollbar { width: 4px; }
+  .task-main::-webkit-scrollbar-track { background: transparent; }
+  .task-main::-webkit-scrollbar-thumb {
+    background: transparent;
+    border-radius: 4px;
+  }
+  .task-main:hover::-webkit-scrollbar-thumb {
+    background: rgba(0,0,0,0.15);
+  }
+
+  /* Columns */
+  .col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    overflow-y: visible;
+  }
+
+  .col-divider {
+    width: 1px;
+    background: #f0f0f0;
+    margin: 0 40px;
+    align-self: stretch;
+    flex-shrink: 0;
+  }
+
+  .col-header {
+    font-family: var(--font-balto);
+    font-size: 27px;
+    font-weight: 700;
+    letter-spacing: 0;
+    color: var(--black);
+    margin-top: 50px;
+    margin-bottom: 8px;
+    flex-shrink: 0;
+  }
+
+  /* ════════════════════════════════
+     CARDS
+  ════════════════════════════════ */
+  .card {
+    background: var(--gray);
+    border-radius: var(--radius);
+    padding: 20px 22px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    cursor: grab;
+    user-select: none;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    flex-shrink: 0;
+  }
+
+  .card:active { cursor: grabbing; }
+
+  .card.dragging {
+    opacity: 0.4;
+    transform: scale(0.98);
+  }
+
+  .card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.07);
+  }
+
+  .card-text {
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 1.4;
+    flex: 1;
+  }
+
+  .card-icon {
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .card-icon svg {
+    width: 36px !important;
+    height: 36px !important;
+    display: block;
+  }
+
+  /* ════════════════════════════════
+     DROP ZONES
+  ════════════════════════════════ */
+  .drop-zone {
+    border-radius: var(--radius);
+    padding: 20px 22px;
+    display: flex;
+    align-items: center;
+    min-height: 70px;
+    transition: background 0.15s, box-shadow 0.15s;
+    flex-shrink: 0;
+  }
+
+  .drop-zone.empty {
+    border: 2px dashed rgba(150,100,255,0.35);
+    background: rgba(202,174,255,0.12);
+  }
+
+  .drop-zone.over {
+    background: rgba(202,174,255,0.5);
+    box-shadow: 0 0 0 3px var(--purple);
+  }
+
+  .drop-zone.filled {
+    background: var(--purple);
+    border: none;
+  }
+
+  .drop-zone.correct {
+    background: #b8f5d0;
+    box-shadow: 0 0 0 2px #52d68a;
+  }
+
+  .drop-zone.incorrect {
+    background: #ffd6d6;
+    box-shadow: 0 0 0 2px #ff7070;
+    animation: shake 0.35s ease;
+  }
+
+  .drop-zone-label {
+    font-size: 24px;
+    color: var(--black);
+    font-style: normal;
+  }
+
+  .drop-zone .card-text {
+    font-size: 24px;
+  }
+
+  @keyframes shake {
+    0%,100% { transform: translateX(0); }
+    25%      { transform: translateX(-6px); }
+    75%      { transform: translateX(6px); }
+  }
+
+  /* ════════════════════════════════
+     RESPONSIVE
+  ════════════════════════════════ */
+  @media (max-width: 1400px) {
+    .sidebar-intro { width: 480px; min-width: 480px; }
+    .sidebar-task { width: 300px; min-width: 300px; padding: 48px 32px 32px; }
+    .sidebar-title { font-size: 32px; }
+    .intro-main { padding: 60px; }
+    .task-main { padding: 0 40px 40px; }
+    #screenIntro { padding: 60px; }
+  }
+
+  @media (max-width: 1280px) {
+    .sidebar-intro { width: 380px; min-width: 380px; }
+    .sidebar-task { width: 260px; min-width: 260px; padding: 40px 28px 28px; }
+    .sidebar-title { font-size: 28px; }
+    .intro-main { padding: 48px; }
+    .task-main { padding: 0 32px 32px; }
+    #screenIntro { padding: 40px; }
+  }
+
+  @media (max-width: 900px) {
+    body { overflow: auto; }
+    .screen { position: relative; min-height: 100vh; flex-direction: column; }
+    .screen.hidden { display: none; }
+    #screenIntro { padding: 24px; gap: 24px; flex-direction: column; }
+    .sidebar-intro {
+      width: 100%;
+      min-width: unset;
+      border-radius: 12px;
+    }
+    .intro-img { height: 200px; }
+    .intro-main { padding: 24px 20px; }
+    .intro-content { gap: 48px; }
+    .intro-text { font-size: 20px; }
+    .sidebar-task {
+      width: 100%;
+      min-width: unset;
+      border-right: none;
+      border-bottom: 1px solid #f0f0f0;
+      padding: 32px 24px;
+    }
+    .task-main { flex-direction: column; padding: 24px 20px; }
+    .col-divider { width: 100%; height: 1px; margin: 24px 0; }
+  }
+
+  @media (max-width: 540px) {
+    .sidebar-title { font-size: 24px; }
+    .btn { font-size: 17px; padding: 14px 24px; }
+    .card-text, .drop-zone .card-text, .drop-zone-label { font-size: 18px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════
+     SCREEN 1 · INTRO
+══════════════════════════════════════ -->
+<div class="screen" id="screenIntro">
+
+  <aside class="sidebar-intro">
+    <div class="sidebar-intro-top">
+      <div class="sidebar-tag"></div>
+      <div class="sidebar-label">Tarea 01</div>
+      <h1 class="sidebar-title">Estructura el proceso antes de empezar</h1>
+    </div>
+    <div class="sidebar-intro-bottom">
+      <img class="intro-img" src="../../../imagenes/Diapo5/Imagen.jpg" alt="" aria-hidden="true" />
+    </div>
+  </aside>
+
+  <main class="intro-main">
+    <div class="intro-content">
+      <div class="intro-text">
+        <p>Un proceso claro ayuda a tomar decisiones coherentes. El equipo puede avanzar alineado y la investigación genera impacto real. Si se mezclan fases o se saltan pasos, el resultado suele ser poco útil.</p>
+        <p>Por eso, antes de pensar en la reunión de kick-off, Simón te asigna tu primera tarea: relacionar correctamente las fases de la investigación con lo que realmente ocurre en cada una.</p>
+      </div>
+      <button class="btn" id="startBtn">
+        Iniciar tarea
+        <svg viewBox="0 0 46 46" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="22.8082" cy="22.8082" r="22.5655" stroke="white" stroke-width="0.485281"/>
+          <path d="M17.4701 28.6316L28.6315 16.9848M28.6315 28.6316V16.9848H17.4701" stroke="white" stroke-width="2.4264"/>
+        </svg>
+      </button>
+    </div>
+  </main>
+
+</div>
+
+<!-- ══════════════════════════════════════
+     SCREEN 2 · TASK
+══════════════════════════════════════ -->
+<div class="screen hidden" id="screenTask">
+
+  <aside class="sidebar-task">
+    <div class="sidebar-tag"></div>
+    <div class="sidebar-label">Tarea 01</div>
+    <h1 class="sidebar-title">Estructura el proceso antes de empezar</h1>
+    <p class="sidebar-desc">Arrastra cada fase al recuadro que corresponde para que todo el proceso tenga sentido como flujo real de trabajo.</p>
+    <button class="btn" id="resetBtn" style="margin-top: 28px;">
+      ↺ Reiniciar
+    </button>
+    <div class="sidebar-progress">
+      <div class="progress-label">Progreso</div>
+      <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+      <div class="progress-count" id="progressCount">0 de 7 completadas</div>
+    </div>
+  </aside>
+
+  <main class="task-main">
+
+    <div class="col" id="colLeft">
+      <div class="col-header">Descripción</div>
+    </div>
+
+    <div class="col-divider"></div>
+
+    <div class="col" id="colRight">
+      <div class="col-header">Fase</div>
+      <div class="drop-zone empty" data-accept="pla"><span class="drop-zone-label">Diseño de la investigación</span></div>
+      <div class="drop-zone empty" data-accept="def"><span class="drop-zone-label">Definición</span></div>
+      <div class="drop-zone empty" data-accept="exe"><span class="drop-zone-label">Ejecución</span></div>
+      <div class="drop-zone empty" data-accept="syn"><span class="drop-zone-label">Síntesis</span></div>
+      <div class="drop-zone empty" data-accept="ana"><span class="drop-zone-label">Análisis</span></div>
+      <div class="drop-zone empty" data-accept="sec"><span class="drop-zone-label">Investigación secundaria</span></div>
+      <div class="drop-zone empty" data-accept="com"><span class="drop-zone-label">Comunicación</span></div>
+    </div>
+
+  </main>
+
+</div>
+
+<script>
+const BUTTON_SVG = `<svg viewBox="0 0 46 46" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:36px;height:36px;display:block"><circle cx="22.8082" cy="22.8082" r="22.5655" stroke="black" stroke-width="0.485281"/><path d="M17.4701 28.6316L28.6315 16.9848M28.6315 28.6316V16.9848H17.4701" stroke="black" stroke-width="2.4264"/></svg>`;
+
+const ALL_CARDS = [
+  { id: 'pla', text: 'Definir el plan' },
+  { id: 'def', text: 'Establecer objetivos, preguntas e hipótesis' },
+  { id: 'exe', text: 'Realizar el trabajo de campo' },
+  { id: 'syn', text: 'Estructurar la información para hacerla comprensible y utilizable' },
+  { id: 'ana', text: 'Organizar la información, identificar patrones e interpretar resultados.' },
+  { id: 'sec', text: 'Revisar estudios previos y documentación existente para contextualizar el problema y validar lo que ya se sabe' },
+  { id: 'com', text: 'Presentar los resultados adaptados a la audiencia para mostrar los hallazgos y cómo se conectan con las decisiones.' },
+];
+
+const PHASE_LABELS = {
+  pla: 'Diseño de la investigación',
+  def: 'Definición',
+  exe: 'Ejecución',
+  syn: 'Síntesis',
+  ana: 'Análisis',
+  sec: 'Investigación secundaria',
+  com: 'Comunicación'
+};
+
+let draggedCard = null;
+
+/* ── Transition ── */
+document.getElementById('startBtn').addEventListener('click', () => {
+  document.getElementById('screenIntro').classList.add('hidden');
+  const task = document.getElementById('screenTask');
+  task.classList.remove('hidden');
+  renderCards([]);
+  attachZoneListeners();
+  updateProgress();
+});
+
+/* ── Reset ── */
+document.getElementById('resetBtn').addEventListener('click', () => {
+  document.querySelectorAll('.drop-zone').forEach(zone => {
+    zone.className = 'drop-zone empty';
+    zone.innerHTML = `<span class="drop-zone-label">${PHASE_LABELS[zone.dataset.accept]}</span>`;
+  });
+  renderCards([]);
+  updateProgress();
+});
+
+/* ── Helpers ── */
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function makeCard(item) {
+  const div = document.createElement('div');
+  div.className = 'card';
+  div.draggable = true;
+  div.dataset.id = item.id;
+  div.innerHTML = `<span class="card-text">${item.text}</span><span class="card-icon">${BUTTON_SVG}</span>`;
+  div.addEventListener('dragstart', e => {
+    draggedCard = div;
+    setTimeout(() => div.classList.add('dragging'), 0);
+    e.dataTransfer.effectAllowed = 'move';
+  });
+  div.addEventListener('dragend', () => {
+    div.classList.remove('dragging');
+    draggedCard = null;
+  });
+  return div;
+}
+
+function renderCards(solvedIds = []) {
+  const col = document.getElementById('colLeft');
+  col.querySelectorAll('.card').forEach(c => c.remove());
+  shuffle(ALL_CARDS.filter(c => !solvedIds.includes(c.id)))
+    .forEach(item => col.appendChild(makeCard(item)));
+}
+
+function updateProgress() {
+  const filled = document.querySelectorAll('.drop-zone.correct').length;
+  const total  = document.querySelectorAll('.drop-zone').length;
+  document.getElementById('progressFill').style.width = (filled / total * 100) + '%';
+  document.getElementById('progressCount').textContent = filled + ' de ' + total + ' completadas';
+}
+
+function attachZoneListeners() {
+  document.querySelectorAll('.drop-zone').forEach(zone => {
+    zone.addEventListener('dragover', e => {
+      e.preventDefault();
+      if (!zone.classList.contains('filled')) zone.classList.add('over');
+    });
+    zone.addEventListener('dragleave', () => zone.classList.remove('over'));
+    zone.addEventListener('drop', e => {
+      e.preventDefault();
+      zone.classList.remove('over');
+      if (!draggedCard || zone.classList.contains('filled')) return;
+
+      const cardId  = draggedCard.dataset.id;
+      const accepts = zone.dataset.accept;
+      const cardText = draggedCard.querySelector('.card-text').textContent;
+
+      zone.innerHTML = `<span class="card-text">${cardText}</span>`;
+      zone.classList.add('filled');
+      zone.classList.remove('empty');
+
+      if (cardId === accepts) {
+        zone.classList.add('correct');
+        draggedCard.remove();
+        updateProgress();
+      } else {
+        zone.classList.add('incorrect');
+        setTimeout(() => {
+          zone.classList.remove('filled', 'incorrect', 'over');
+          zone.classList.add('empty');
+          zone.innerHTML = `<span class="drop-zone-label">${PHASE_LABELS[zone.dataset.accept]}</span>`;
+          const solved = [...document.querySelectorAll('.drop-zone.correct')].map(z => z.dataset.accept);
+          renderCards(solved);
+          updateProgress();
+        }, 600);
+      }
+    });
+  });
+}
+</script>
+</body>
+</html>

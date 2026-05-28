@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Las preguntas de la investigación</title>
+<style>
+  @font-face {
+    font-family: 'Balto-Bold';
+    src: url('../../fonts/Balto-Bold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'SF Pro Display';
+    src: url('../../fonts/sf-pro-display-regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'SF Pro Display';
+    src: url('../../fonts/sf-pro-display-bold.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+  }
+</style>
+<style>
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  :root {
+    --accent: #81f787;
+    --black: #000000;
+    --white: #ffffff;
+    --bg-panel: #f7f7f7;
+    --font-bold: 'Balto-Bold', Helvetica, sans-serif;
+    --font-body: 'SF Pro Display', Helvetica, sans-serif;
+    --sidebar-w: 34vw;
+    --sidebar-max: 580px;
+  }
+
+  html, body {
+    height: 100%;
+    background: var(--white);
+  }
+
+  /* ── LAYOUT ── */
+  .slide {
+    display: flex;
+    min-height: 100dvh;
+    width: 100%;
+  }
+
+  /* LEFT: fixed sidebar */
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: var(--sidebar-w);
+    max-width: var(--sidebar-max);
+    height: 100dvh;
+    background: var(--white);
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: clamp(2rem, 5vw, 4rem) clamp(1.5rem, 4vw, 3.5rem);
+    gap: clamp(1.5rem, 3vh, 3rem);
+    border-right: 1px solid #e8e8e8;
+  }
+
+  .section-title {
+    font-family: var(--font-bold);
+    font-weight: 800;
+    font-size: clamp(1.6rem, 3.2vw, 3.2rem);
+    line-height: 1.15;
+    color: var(--black);
+    position: relative;
+  }
+
+  .section-title::before {
+    content: '';
+    display: block;
+    width: clamp(40px, 6vw, 80px);
+    height: clamp(8px, 1.2vh, 16px);
+    background: var(--accent);
+    margin-bottom: 1.2rem;
+  }
+
+  .section-description-main {
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: clamp(0.85rem, 1.3vw, 2.05rem);
+    line-height: 1.65;
+    color: #333;
+  }
+
+  .scroll-hint {
+    font-family: var(--font-body);
+    font-weight: 500;
+    font-size: 1.2rem;
+    color: #888;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .scroll-hint::after {
+    content: '↓';
+    font-size: 1.1em;
+    animation: bounce 1.6s ease-in-out infinite;
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(5px); }
+  }
+
+  /* RIGHT: scrollable content */
+  .content-area {
+    margin-left: min(var(--sidebar-w), var(--sidebar-max));
+    flex: 1;
+    min-height: 100dvh;
+    overflow-y: auto;
+    background: var(--bg-panel);
+    padding: clamp(2rem, 5vw, 4rem) clamp(1.5rem, 4vw, 3rem);
+    display: flex;
+    flex-direction: column;
+    gap: clamp(3rem, 6vh, 5rem);
+  }
+
+  /* ── SECTION CARDS ── */
+  .data-section {
+    background: var(--white);
+    border-radius: 2px;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.55s ease, transform 0.55s ease;
+  }
+
+  .data-section.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .section-header {
+    position: relative;
+    padding: clamp(1.5rem, 3vh, 2.5rem) clamp(1.5rem, 3vw, 2.5rem);
+    border-bottom: 1px solid #eee;
+  }
+
+  .section-num-bar {
+    width: clamp(40px, 6vw, 80px);
+    height: clamp(6px, 1vh, 12px);
+    background: var(--accent);
+    margin-bottom: 1rem;
+  }
+
+  .section-heading {
+    font-family: var(--font-bold);
+    font-weight: 800;
+    font-size: clamp(1.3rem, 2.5vw, 2.2rem);
+    color: var(--black);
+    line-height: 1.2;
+  }
+
+  /* ── ANSWERS ── */
+  .answers-list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .answer-item {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: clamp(1rem, 3vw, 3rem);
+    padding: clamp(1.2rem, 2.5vh, 2rem) clamp(1.5rem, 3vw, 2.5rem);
+    border-bottom: 1px solid #f0f0f0;
+    align-items: start;
+  }
+
+  .answer-item:last-child {
+    border-bottom: none;
+  }
+
+  .answer-label {
+    font-family: var(--font-bold);
+    font-weight: 700;
+    font-size: clamp(0.85rem, 1.3vw, 2.05rem);
+    color: var(--black);
+    line-height: 1.4;
+    padding-top: 0.1em;
+  }
+
+  .answer-text {
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: clamp(0.85rem, 1.3vw, 2.05rem);
+    color: #1a1a1a;
+    line-height: 1.7;
+  }
+
+  /* ── MOBILE: stack layout ── */
+  @media (max-width: 768px) {
+    .slide {
+      flex-direction: column;
+    }
+
+    .sidebar {
+      position: relative;
+      width: 100%;
+      max-width: none;
+      height: auto;
+      min-height: auto;
+      border-right: none;
+      border-bottom: 3px solid var(--accent);
+      padding: 2rem 1.5rem;
+    }
+
+    .content-area {
+      margin-left: 0;
+      padding: 1.5rem 1rem;
+      gap: 2rem;
+    }
+
+    .answer-item {
+      grid-template-columns: 1fr;
+      gap: 0.4rem;
+    }
+
+    .answer-label {
+      font-size: 0.95rem;
+      color: #444;
+    }
+
+    .scroll-hint {
+      display: none;
+    }
+  }
+
+  @media (min-width: 769px) and (max-width: 1100px) {
+    :root {
+      --sidebar-w: 38vw;
+    }
+
+    .answer-item {
+      grid-template-columns: 1fr 1.5fr;
+    }
+  }
+</style>
+</head>
+<body>
+<main class="slide">
+
+  <!-- LEFT SIDEBAR -->
+  <aside class="sidebar" aria-labelledby="section-title">
+    <h1 class="section-title" id="section-title">Las preguntas de la investigación</h1>
+    <p class="section-description-main">Simón ha preparado con tu ayuda las preguntas de la investigación, que están diseñadas para explorar la causa concreta de abandono justo antes de terminar el proceso de onboarding, validar o refutar la hipótesis y guiar la selección de técnicas.</p>
+    <p class="section-description-main">No se trata de preguntar de forma genérica por qué las personas abandonan el proceso, sino de abordar el problema desde ángulos concretos.</p>
+    <p class="scroll-hint">Deslíza hacia abajo para conocer las preguntas</p>
+  </aside>
+
+  <!-- RIGHT SCROLLABLE AREA -->
+  <section class="content-area" aria-label="Preguntas de la investigación">
+
+    <!-- 01 Comprensión del valor -->
+    <article class="data-section" aria-labelledby="q01-title">
+      <header class="section-header">
+        <div class="section-num-bar" aria-hidden="true"></div>
+        <h2 class="section-heading" id="q01-title">01 / Comprensión del valor</h2>
+      </header>
+      <div class="answers-list">
+        <div class="answer-item">
+          <h3 class="answer-label">Propósito</h3>
+          <p class="answer-text">¿En qué medida las personas usuarias comprenden el propósito de las preguntas sobre objetivos a corto, medio y largo plazo?</p>
+        </div>
+        <div class="answer-item">
+          <h3 class="answer-label">Significado</h3>
+          <p class="answer-text">¿Qué significado atribuyen a esas preguntas dentro del proceso de onboarding?</p>
+        </div>
+      </div>
+    </article>
+
+    <!-- 02 Percepción de utilidad -->
+    <article class="data-section" aria-labelledby="q02-title">
+      <header class="section-header">
+        <div class="section-num-bar" aria-hidden="true"></div>
+        <h2 class="section-heading" id="q02-title">02 / Percepción de utilidad</h2>
+      </header>
+      <div class="answers-list">
+        <div class="answer-item">
+          <h3 class="answer-label">Relevancia</h3>
+          <p class="answer-text">¿Qué percepción tienen las personas usuarias sobre la relevancia de la información solicitada en el último paso?</p>
+        </div>
+        <div class="answer-item">
+          <h3 class="answer-label">Ayuda para alcanzar sus objetivos</h3>
+          <p class="answer-text">¿Consideran estas preguntas útiles o irrelevantes para alcanzar su objetivo?</p>
+        </div>
+      </div>
+    </article>
+
+    <!-- 03 Fricción y carga cognitiva -->
+    <article class="data-section" aria-labelledby="q03-title">
+      <header class="section-header">
+        <div class="section-num-bar" aria-hidden="true"></div>
+        <h2 class="section-heading" id="q03-title">03 / Fricción y carga cognitiva</h2>
+      </header>
+      <div class="answers-list">
+        <div class="answer-item">
+          <h3 class="answer-label">Esfuerzo adicional</h3>
+          <p class="answer-text">¿En qué medida las preguntas sobre objetivos generan fricción o esfuerzo adicional durante el proceso?</p>
+        </div>
+        <div class="answer-item">
+          <h3 class="answer-label">Complejidad</h3>
+          <p class="answer-text">¿Qué elementos del último paso resultan más confusos o complejos?</p>
+        </div>
+      </div>
+    </article>
+
+    <!-- 04 Percepción de riesgo -->
+    <article class="data-section" aria-labelledby="q04-title">
+      <header class="section-header">
+        <div class="section-num-bar" aria-hidden="true"></div>
+        <h2 class="section-heading" id="q04-title">04 / Percepción de riesgo</h2>
+      </header>
+      <div class="answers-list">
+        <div class="answer-item">
+          <h3 class="answer-label">Confianza</h3>
+          <p class="answer-text">¿Cómo influye la solicitud de este tipo de información en la confianza de las personas usuarias hacia la app?</p>
+        </div>
+        <div class="answer-item">
+          <h3 class="answer-label">Preocupación</h3>
+          <p class="answer-text">¿Existen dudas o preocupaciones al compartir este tipo de datos?</p>
+        </div>
+      </div>
+    </article>
+
+    <!-- 05 Momento dentro del flujo -->
+    <article class="data-section" aria-labelledby="q05-title">
+      <header class="section-header">
+        <div class="section-num-bar" aria-hidden="true"></div>
+        <h2 class="section-heading" id="q05-title">05 / Momento dentro del flujo</h2>
+      </header>
+      <div class="answers-list">
+        <div class="answer-item">
+          <h3 class="answer-label">Adecuación</h3>
+          <p class="answer-text">¿Es adecuado el momento en el que se solicita esta información dentro del onboarding?</p>
+        </div>
+        <div class="answer-item">
+          <h3 class="answer-label">Obligatoriedad</h3>
+          <p class="answer-text">¿Preferirían las personas usuarias proporcionar esta información en otro momento del proceso y sólo si lo desean?</p>
+        </div>
+      </div>
+    </article>
+
+    <!-- 06 Comportamiento observable -->
+    <article class="data-section" aria-labelledby="q06-title">
+      <header class="section-header">
+        <div class="section-num-bar" aria-hidden="true"></div>
+        <h2 class="section-heading" id="q06-title">06 / Comportamiento observable</h2>
+      </header>
+      <div class="answers-list">
+        <div class="answer-item">
+          <h3 class="answer-label">Acciones</h3>
+          <p class="answer-text">¿Qué hacen las personas usuarias cuando llegan a este paso?</p>
+        </div>
+        <div class="answer-item">
+          <h3 class="answer-label">Puntos de dolor</h3>
+          <p class="answer-text">¿En qué momentos del proceso previos al abandono dudan o se detienen?</p>
+        </div>
+      </div>
+    </article>
+
+    <!-- 07 Expectativas -->
+    <article class="data-section" aria-labelledby="q07-title">
+      <header class="section-header">
+        <div class="section-num-bar" aria-hidden="true"></div>
+        <h2 class="section-heading" id="q07-title">07 / Expectativas</h2>
+      </header>
+      <div class="answers-list">
+        <div class="answer-item">
+          <h3 class="answer-label">Perspectiva</h3>
+          <p class="answer-text">¿Qué esperan las personas usuarias cuando empiezan el proceso de onboarding de la funcionalidad de ahorro?</p>
+        </div>
+        <div class="answer-item">
+          <h3 class="answer-label">Alineación</h3>
+          <p class="answer-text">¿Cómo encaja en las expectativas de las personas usuarias (o no) el paso de explicar qué acciones tomarán a corto, mediano y largo plazo para cumplir con sus metas de ahorro?</p>
+        </div>
+      </div>
+    </article>
+
+  </section>
+</main>
+
+<script>
+  // Intersection Observer for scroll-reveal animations
+  const sections = document.querySelectorAll('.data-section');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 80);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.08 });
+
+  sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>

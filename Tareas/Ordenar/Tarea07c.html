@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta charset="utf-8"/>
+<title>Tarea 07 – Síntesis</title>
+<style>
+@font-face {
+    font-family: 'BaltoBold';
+    src: url('../../fonts/Balto-Bold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+  }
+</style>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --purple: #caaeff;
+    --gray: #e5e5e5;
+    --white: #ffffff;
+    --black: #000000;
+    --radius: 10px;
+    --font: 'SF Pro Display', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    --font-balto: 'BaltoBold', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  }
+
+  html, body {
+    height: 100%;
+    background: var(--white);
+    font-family: var(--font);
+    color: var(--black);
+    overflow: hidden;
+  }
+
+  .page {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    background: var(--white);
+  }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    width: 440px;
+    min-width: 440px;
+    padding: 64px 44px 44px;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid #f0f0f0;
+    flex-shrink: 0;
+    overflow: hidden;
+  }
+
+  .sidebar-tag {
+    width: 60px;
+    height: 12px;
+    background: var(--purple);
+    border-radius: 2px;
+    margin-bottom: 28px;
+  }
+
+  .sidebar-label {
+    font-size: 24px;
+    font-weight: 400;
+    color: var(--black);
+    margin-bottom: 16px;
+  }
+
+  .sidebar-title {
+    font-family: var(--font-balto);
+    font-size: 34px;
+    font-weight: 700;
+    line-height: 1.15;
+  }
+
+  /* ── BUTTONS ── */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--black);
+    color: var(--white);
+    border: none;
+    border-radius: var(--radius);
+    padding: 18px 32px;
+    font-size: 20px;
+    font-family: var(--font);
+    font-weight: 400;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    flex-shrink: 0;
+  }
+
+  .btn:hover {
+    background: #333;
+    transform: translateY(-4px);
+    box-shadow: 0 16px 40px rgba(0,0,0,0.25);
+  }
+
+  .btn-check {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--purple);
+    color: var(--black);
+    border: none;
+    border-radius: var(--radius);
+    padding: 18px 32px;
+    font-size: 20px;
+    font-family: var(--font);
+    font-weight: 400;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    flex-shrink: 0;
+  }
+
+  .btn-check:hover {
+    background: #b89ef0;
+    transform: translateY(-4px);
+    box-shadow: 0 16px 40px rgba(0,0,0,0.15);
+  }
+
+  /* ── MAIN ── */
+  .main {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 80px;
+    overflow-y: auto;
+  }
+
+  .widget {
+    width: 100%;
+    max-width: 680px;
+    display: flex;
+    flex-direction: column;
+    gap: 36px;
+  }
+
+  /* ── HEADER ── */
+  .question {
+    font-family: var(--font-balto);
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1.25;
+  }
+
+  .instruction {
+    font-size: 18px;
+    color: #888;
+    font-style: italic;
+    margin-top: -20px;
+  }
+
+  /* ── SORTABLE LIST ── */
+  .sort-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .sort-item {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 22px 24px;
+    background: var(--gray);
+    border-radius: var(--radius);
+    cursor: grab;
+    user-select: none;
+    border: 2px solid transparent;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.2s ease, border-color 0.2s ease;
+  }
+
+  .sort-item:active { cursor: grabbing; }
+
+  .sort-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.07);
+  }
+
+  .sort-item.dragging {
+    opacity: 0.35;
+    transform: scale(0.98);
+  }
+
+  .sort-item.drag-over {
+    border-color: var(--purple);
+    background: rgba(202,174,255,0.2);
+  }
+
+  .sort-item.correct {
+    background: #b8f5d0;
+    border-color: #52d68a;
+    animation: shakeGreen 0.35s ease;
+    cursor: default;
+  }
+
+  .sort-item.incorrect {
+    background: #ffd6d6;
+    border-color: #ff7070;
+    animation: shakeRed 0.35s ease;
+  }
+
+  @keyframes shakeGreen {
+    0%,100% { transform: translateX(0); }
+    25%      { transform: translateX(-6px); }
+    75%      { transform: translateX(6px); }
+  }
+
+  @keyframes shakeRed {
+    0%,100% { transform: translateX(0); }
+    25%      { transform: translateX(-6px); }
+    75%      { transform: translateX(6px); }
+  }
+
+  .sort-handle {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex-shrink: 0;
+    opacity: 0.3;
+  }
+
+  .sort-handle span {
+    display: block;
+    width: 20px;
+    height: 2px;
+    background: var(--black);
+    border-radius: 2px;
+  }
+
+  .sort-number {
+    font-family: var(--font-balto);
+    font-size: 18px;
+    font-weight: 700;
+    color: rgba(0,0,0,0.25);
+    width: 24px;
+    flex-shrink: 0;
+    text-align: center;
+  }
+
+  .sort-text {
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 1.4;
+    flex: 1;
+  }
+
+  /* ── FEEDBACK ── */
+  .feedback {
+    padding: 24px 28px;
+    border-radius: var(--radius);
+    font-size: 20px;
+    line-height: 1.6;
+    display: none;
+  }
+
+  .feedback.show { display: block; animation: fadeIn 0.3s ease; }
+  .feedback.ok { background: #b8f5d0; border: 1.5px solid #52d68a; }
+  .feedback.fail { background: #ffd6d6; border: 1.5px solid #ff7070; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .buttons-row {
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 1280px) {
+    .sidebar { width: 320px; min-width: 320px; padding: 48px 28px 28px; }
+    .sidebar-title { font-size: 26px; }
+    .main { padding: 48px; }
+    .sort-text { font-size: 20px; }
+  }
+
+  @media (max-width: 900px) {
+    body { overflow: auto; }
+    .page { position: relative; min-height: 100vh; flex-direction: column; }
+    .sidebar { width: 100%; min-width: unset; border-right: none; border-bottom: 1px solid #f0f0f0; padding: 36px 24px; }
+    .main { padding: 36px 24px; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-tag"></div>
+    <div class="sidebar-label">Tarea 07</div>
+    <h1 class="sidebar-title">¿Cómo se compone un buen proceso de síntesis?</h1>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+    <div class="widget">
+
+      <div class="question">Ordena correctamente el proceso de síntesis</div>
+      <div class="instruction">Arrastra los elementos para ordenarlos</div>
+
+      <div class="sort-list" id="sortList"></div>
+
+      <div class="feedback" id="feedback"></div>
+
+      <div class="buttons-row">
+        <button class="btn-check" id="checkBtn">Comprobar</button>
+        <button class="btn" id="resetBtn">↺ Reiniciar</button>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<script>
+const CORRECT_ORDER = ['Organizar', 'Priorizar', 'Construir narrativa'];
+
+const FEEDBACK = {
+  ok:   'Primero debes organizar, luego priorizar y, por último, construir la narrativa.',
+  fail: 'Primero debes organizar, luego priorizar y, por último, construir la narrativa.'
+};
+
+let dragSrc = null;
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function getOrder() {
+  return [...document.querySelectorAll('.sort-item')].map(el => el.dataset.value);
+}
+
+function updateNumbers() {
+  document.querySelectorAll('.sort-item').forEach((el, i) => {
+    el.querySelector('.sort-number').textContent = i + 1;
+  });
+}
+
+function makeItem(text) {
+  const div = document.createElement('div');
+  div.className = 'sort-item';
+  div.draggable = true;
+  div.dataset.value = text;
+  div.innerHTML = `
+    <div class="sort-handle"><span></span><span></span><span></span></div>
+    <div class="sort-number"></div>
+    <div class="sort-text">${text}</div>
+  `;
+
+  div.addEventListener('dragstart', e => {
+    dragSrc = div;
+    setTimeout(() => div.classList.add('dragging'), 0);
+    e.dataTransfer.effectAllowed = 'move';
+  });
+
+  div.addEventListener('dragend', () => {
+    div.classList.remove('dragging');
+    document.querySelectorAll('.sort-item').forEach(el => el.classList.remove('drag-over'));
+    dragSrc = null;
+    updateNumbers();
+  });
+
+  div.addEventListener('dragover', e => {
+    e.preventDefault();
+    if (!dragSrc || dragSrc === div) return;
+    div.classList.add('drag-over');
+    const list = document.getElementById('sortList');
+    const items = [...list.querySelectorAll('.sort-item')];
+    const srcIdx = items.indexOf(dragSrc);
+    const tgtIdx = items.indexOf(div);
+    if (srcIdx < tgtIdx) {
+      list.insertBefore(dragSrc, div.nextSibling);
+    } else {
+      list.insertBefore(dragSrc, div);
+    }
+  });
+
+  div.addEventListener('dragleave', () => div.classList.remove('drag-over'));
+
+  return div;
+}
+
+function render() {
+  const list = document.getElementById('sortList');
+  list.innerHTML = '';
+  document.getElementById('feedback').className = 'feedback';
+  document.getElementById('feedback').textContent = '';
+
+  // Always shuffle so it's never in correct order on load
+  let shuffled = shuffle([...CORRECT_ORDER]);
+  // Ensure it's never already correct
+  while (shuffled.join(',') === CORRECT_ORDER.join(',')) {
+    shuffled = shuffle(shuffled);
+  }
+
+  shuffled.forEach(text => list.appendChild(makeItem(text)));
+  updateNumbers();
+}
+
+document.getElementById('checkBtn').addEventListener('click', () => {
+  const current = getOrder();
+  const isCorrect = current.join(',') === CORRECT_ORDER.join(',');
+  const items = document.querySelectorAll('.sort-item');
+  const fb = document.getElementById('feedback');
+
+  items.forEach((item, i) => {
+    if (current[i] === CORRECT_ORDER[i]) {
+      item.classList.add('correct');
+      setTimeout(() => item.classList.remove('correct'), 400);
+    } else {
+      item.classList.add('incorrect');
+      setTimeout(() => item.classList.remove('incorrect'), 400);
+    }
+  });
+
+  fb.textContent = isCorrect ? FEEDBACK.ok : FEEDBACK.fail;
+  fb.className = 'feedback show ' + (isCorrect ? 'ok' : 'fail');
+});
+
+document.getElementById('resetBtn').addEventListener('click', render);
+
+render();
+</script>
+</body>
+</html>

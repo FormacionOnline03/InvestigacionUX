@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>La importancia de la investigación secundaria</title>
+<style>
+  @font-face {
+    font-family: 'Balto-Bold';
+    src: url('../../fonts/Balto-Bold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'SF Pro Display';
+    src: url('../../fonts/sf-pro-display-regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'SF Pro Display';
+    src: url('../../fonts/sf-pro-display-bold.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  :root {
+    --accent: #81f787;
+    --black: #000;
+    --white: #fff;
+    --bg-panel: #f7f7f7;
+    --font-bold: 'Balto-Bold', Helvetica, sans-serif;
+    --font-body: 'SF Pro Display', Helvetica, sans-serif;
+    --sidebar-w: 33vw;
+    --sidebar-max: 634px;
+    --fs-title: clamp(1.6rem, 3vw, 3.2rem);
+    --fs-heading: clamp(1.2rem, 2.2vw, 2.2rem);
+    --fs-body: clamp(0.85rem, 1.3vw, 2rem);
+    --fs-question: clamp(1rem, 1.8vw, 1.75rem);
+  }
+
+  html, body {
+    min-height: 100%;
+    background: var(--white);
+  }
+
+  /* ── OUTER LAYOUT ── */
+  .slide {
+    display: flex;
+    min-height: 100dvh;
+    width: 100%;
+  }
+
+  /* ══════════════════════════════
+     LEFT SIDEBAR
+  ══════════════════════════════ */
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: var(--sidebar-w);
+    max-width: var(--sidebar-max);
+    height: 100dvh;
+    background: var(--white);
+    z-index: 10;
+    border-right: 1px solid #e8e8e8;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: clamp(2rem, 5vh, 4rem) clamp(1.5rem, 3.5vw, 3rem);
+    gap: clamp(2rem, 4vh, 3.5rem);
+  }
+
+  .section-title {
+    font-family: var(--font-bold);
+    font-weight: 700;
+    font-size: var(--fs-title);
+    line-height: 1.2;
+    color: var(--black);
+  }
+
+  .sidebar-bottom {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(1.5rem, 3vh, 2.5rem);
+  }
+
+  .section-description {
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: var(--fs-body);
+    line-height: 1.65;
+    color: var(--black);
+  }
+
+  .questions-list {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(1.2rem, 2.5vh, 2rem);
+    list-style: none;
+  }
+
+  .question-item {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.5rem, 1vh, 0.8rem);
+  }
+
+  .highlight-bar {
+    width: clamp(40px, 5vw, 80px);
+    height: clamp(6px, 1vh, 14px);
+    background: var(--accent);
+    flex-shrink: 0;
+  }
+
+  .question-text {
+    font-family: var(--font-bold);
+    font-weight: 700;
+    font-size: var(--fs-question);
+    line-height: 1.35;
+    color: var(--black);
+  }
+
+  /* ══════════════════════════════
+     RIGHT CONTENT AREA
+  ══════════════════════════════ */
+  .content-area {
+    margin-left: min(var(--sidebar-w), var(--sidebar-max));
+    flex: 1;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(1rem, 2vh, 1.5rem);
+    padding: clamp(2rem, 4vw, 4rem) clamp(1.5rem, 3vw, 3rem);
+    background: var(--white);
+  }
+
+  /* ── PANEL (grey box) ── */
+  .panel {
+    background: var(--bg-panel);
+    padding: clamp(1.5rem, 3vw, 2.5rem);
+    display: flex;
+    flex-direction: column;
+    gap: clamp(1.5rem, 3vh, 2.5rem);
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+
+  .panel.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Panel header */
+  .panel-header {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.6rem, 1.2vh, 1rem);
+  }
+
+  .panel-title {
+    font-family: var(--font-bold);
+    font-weight: 700;
+    font-size: var(--fs-heading);
+    line-height: 1.25;
+    color: var(--black);
+  }
+
+  /* Source types */
+  .sources-list {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(1rem, 2vh, 1.8rem);
+  }
+
+  .source-item {
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: var(--fs-body);
+    line-height: 1.65;
+    color: var(--black);
+  }
+
+  .source-item strong {
+    font-weight: 700;
+  }
+
+  /* ── BOTTOM TWO PANELS SIDE BY SIDE ── */
+  .panels-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(1rem, 2vh, 1.5rem);
+    flex: 1;
+  }
+
+  .panel-body-text {
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: var(--fs-body);
+    line-height: 1.65;
+    color: var(--black);
+  }
+
+  /* bullet list */
+  .bullet-list {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.5rem, 1.2vh, 1rem);
+    list-style: none;
+  }
+
+  .bullet-item {
+    display: flex;
+    align-items: center;
+    gap: clamp(0.5rem, 1vw, 0.9rem);
+  }
+
+  .bullet-dot {
+    width: clamp(8px, 1vw, 14px);
+    height: clamp(8px, 1vw, 14px);
+    min-width: clamp(8px, 1vw, 14px);
+    background: var(--accent);
+    flex-shrink: 0;
+  }
+
+  .bullet-text {
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: var(--fs-body);
+    line-height: 1.5;
+    color: var(--black);
+  }
+
+  .panel-footer-text {
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: var(--fs-body);
+    line-height: 1.65;
+    color: var(--black);
+  }
+
+  /* ══════════════════════════════
+     MOBILE
+  ══════════════════════════════ */
+  @media (max-width: 768px) {
+    .slide {
+      flex-direction: column;
+    }
+
+    .sidebar {
+      position: relative;
+      width: 100%;
+      max-width: none;
+      height: auto;
+      border-right: none;
+      border-bottom: 3px solid var(--accent);
+      padding: 2rem 1.5rem;
+      justify-content: flex-start;
+      gap: 1.5rem;
+    }
+
+    .content-area {
+      margin-left: 0;
+      padding: 1.5rem 1rem;
+    }
+
+    .panels-row {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (min-width: 769px) and (max-width: 1200px) {
+    :root {
+      --sidebar-w: 38vw;
+    }
+    .panels-row {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+</head>
+<body>
+<main class="slide">
+
+  <!-- ── LEFT SIDEBAR ── -->
+  <aside class="sidebar" aria-labelledby="section-title">
+    <h1 class="section-title" id="section-title">La importancia de la investigación secundaria</h1>
+
+    <div class="sidebar-bottom">
+      <p class="section-description">Antes de investigar con personas usuarias reales, debes preguntarte:</p>
+
+      <ul class="questions-list" role="list" aria-label="Preguntas clave previas a la investigación">
+        <li class="question-item">
+          <div class="highlight-bar" aria-hidden="true"></div>
+          <p class="question-text">01/ ¿Qué se sabe ya sobre este tema?</p>
+        </li>
+        <li class="question-item">
+          <div class="highlight-bar" aria-hidden="true"></div>
+          <p class="question-text">02/ ¿Existen datos internos o estudios previos?</p>
+        </li>
+        <li class="question-item">
+          <div class="highlight-bar" aria-hidden="true"></div>
+          <p class="question-text">03/ ¿Hay señales claras del problema?</p>
+        </li>
+      </ul>
+    </div>
+  </aside>
+
+  <!-- ── RIGHT CONTENT ── -->
+  <section class="content-area" aria-label="Contenido sobre investigación secundaria">
+
+    <!-- Tipos de fuentes -->
+    <div class="panel" aria-labelledby="tipos-title">
+      <div class="panel-header">
+        <div class="highlight-bar" aria-hidden="true"></div>
+        <h2 class="panel-title" id="tipos-title">Tipos de fuentes clave</h2>
+      </div>
+      <div class="sources-list">
+        <p class="source-item"><strong>Internas</strong>: analítica, estudios de UX y tickets de Customer Support. Permiten validar el problema real.</p>
+        <p class="source-item"><strong>Externas</strong>: reseñas y foros. Amplían el contexto.</p>
+        <p class="source-item"><strong>Externas formales</strong>: informes y benchmarks. Validan tendencias.</p>
+      </div>
+    </div>
+
+    <!-- Two bottom panels -->
+    <div class="panels-row">
+
+      <!-- Objetivos -->
+      <div class="panel">
+        <p class="panel-body-text">El objetivo de la investigación secundaria no es obtener respuestas definitivas. La investigación secundaria te ayuda a:</p>
+        <ul class="bullet-list" role="list" aria-label="Beneficios de la investigación secundaria">
+          <li class="bullet-item">
+            <div class="bullet-dot" aria-hidden="true"></div>
+            <span class="bullet-text">Reducir la incertidumbre inicial</span>
+          </li>
+          <li class="bullet-item">
+            <div class="bullet-dot" aria-hidden="true"></div>
+            <span class="bullet-text">Validar el problema</span>
+          </li>
+          <li class="bullet-item">
+            <div class="bullet-dot" aria-hidden="true"></div>
+            <span class="bullet-text">Enfocar mejor la validación primaria</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Reglas clave -->
+      <div class="panel">
+        <p class="panel-body-text">La clave principal es no empezar desde cero si ya tienes información. Otra regla clave es empezar siempre por las fuentes internas, porque:</p>
+        <ul class="bullet-list" role="list" aria-label="Ventajas de comenzar por fuentes internas">
+          <li class="bullet-item">
+            <div class="bullet-dot" aria-hidden="true"></div>
+            <span class="bullet-text">Son específicas de tu producto</span>
+          </li>
+          <li class="bullet-item">
+            <div class="bullet-dot" aria-hidden="true"></div>
+            <span class="bullet-text">Se basan en comportamientos reales</span>
+          </li>
+          <li class="bullet-item">
+            <div class="bullet-dot" aria-hidden="true"></div>
+            <span class="bullet-text">Son directamente accionables</span>
+          </li>
+        </ul>
+        <p class="panel-footer-text">Primero debes entender lo que está pasando y luego debes buscar por qué podría estar pasando.</p>
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+<script>
+  const panels = document.querySelectorAll('.panel');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        const idx = Array.from(panels).indexOf(entry.target);
+        setTimeout(() => entry.target.classList.add('visible'), idx * 120);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.08 });
+  panels.forEach(p => observer.observe(p));
+</script>
+</body>
+</html>

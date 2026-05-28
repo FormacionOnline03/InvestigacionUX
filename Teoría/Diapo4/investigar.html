@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>¿Debes investigar siempre?</title>
+<style>
+  @font-face {
+    font-family: 'Balto-Bold';
+    src: url('../../fonts/Balto-Bold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'SF Pro Display';
+    src: url('../../fonts/sf-pro-display-regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'SF Pro Display';
+    src: url('../../fonts/sf-pro-display-bold.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  :root {
+    --accent: #81f787;
+    --black: #000;
+    --white: #fff;
+    --bg-sidebar: #f3f3f3;
+    --font-bold: 'Balto-Bold', Helvetica, sans-serif;
+    --font-body: 'SF Pro Display', Helvetica, sans-serif;
+    --sidebar-w: 30vw;
+    --sidebar-max: 586px;
+  }
+
+  html, body {
+    min-height: 100%;
+    background: var(--white);
+  }
+
+  /* ── LAYOUT ── */
+  .slide {
+    display: flex;
+    min-height: 100dvh;
+    width: 100%;
+  }
+
+  /* LEFT SIDEBAR */
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: var(--sidebar-w);
+    max-width: var(--sidebar-max);
+    height: 100dvh;
+    background: var(--bg-sidebar);
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: clamp(2.5rem, 7vh, 6rem) clamp(1.5rem, 3.5vw, 3rem);
+    gap: clamp(2rem, 4vh, 4rem);
+  }
+
+  .section-title {
+    font-family: var(--font-bold);
+    font-weight: 700;
+    font-size: clamp(1.6rem, 3vw, 3.2rem);
+    line-height: 1.15;
+    color: var(--black);
+  }
+
+  .section-description {
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: clamp(0.85rem, 1.3vw, 2rem);
+    line-height: 1.65;
+    color: var(--black);
+  }
+
+  /* RIGHT GRID AREA */
+  .content-area {
+    margin-left: min(var(--sidebar-w), var(--sidebar-max));
+    flex: 1;
+    min-height: 100dvh;
+    background: var(--white);
+    padding: clamp(2rem, 5vw, 5rem) clamp(1.5rem, 4vw, 4rem);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+    gap: clamp(2.5rem, 5vh, 5rem) clamp(2rem, 4vw, 5rem);
+    align-content: center;
+  }
+
+  /* ── CARDS ── */
+  .card {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.8rem, 1.5vh, 1.5rem);
+    cursor: pointer;
+    position: relative;
+  }
+
+  .highlight-bar {
+    width: clamp(50px, 6vw, 103px);
+    height: clamp(8px, 1.2vh, 20px);
+    background: var(--accent);
+    transition: width 0.3s ease;
+  }
+
+  .card:hover .highlight-bar {
+    width: clamp(70px, 9vw, 150px);
+  }
+
+  .card-question {
+    font-family: var(--font-bold);
+    font-weight: 700;
+    font-size: clamp(1.1rem, 2vw, 2.2rem);
+    line-height: 1.35;
+    color: var(--black);
+  }
+
+  .card-body {
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: clamp(0.85rem, 1.3vw, 2rem);
+    line-height: 1.65;
+    color: var(--black);
+  }
+
+  /* entry animation */
+  .card {
+    opacity: 0;
+    transform: translateY(20px);
+    transition:
+      opacity 0.5s ease,
+      transform 0.5s ease,
+      /* keep transitions for hover too */
+      background 0.2s;
+  }
+
+  .card.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── MOBILE ── */
+  @media (max-width: 768px) {
+    .slide {
+      flex-direction: column;
+    }
+
+    .sidebar {
+      position: relative;
+      width: 100%;
+      max-width: none;
+      height: auto;
+      border-bottom: 3px solid var(--accent);
+      padding: 2rem 1.5rem;
+      gap: 1.2rem;
+    }
+
+    .content-area {
+      margin-left: 0;
+      grid-template-columns: 1fr;
+      padding: 2rem 1.5rem;
+      gap: 2.5rem;
+      align-content: start;
+    }
+
+    /* on mobile all cards start open */
+    .card-body {
+      max-height: none !important;
+      opacity: 1 !important;
+    }
+  }
+
+  @media (min-width: 769px) and (max-width: 1100px) {
+    :root {
+      --sidebar-w: 36vw;
+    }
+    .content-area {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+</head>
+<body>
+<main class="slide">
+
+  <!-- LEFT SIDEBAR -->
+  <aside class="sidebar">
+    <h1 class="section-title">¿Debes investigar siempre?</h1>
+    <p class="section-description">En UX, investigar no es el primer paso automático, sino una decisión estratégica.<br><br>Antes de empezar, debes validar ciertas cuestiones.</p>
+  </aside>
+
+  <!-- RIGHT GRID -->
+  <section class="content-area" aria-label="Preguntas sobre la investigación">
+
+    <article class="card">
+      <div class="highlight-bar" aria-hidden="true"></div>
+      <h2 class="card-question">01/ ¿Existe incertidumbre real?</h2>
+      <p class="card-body">¿Puedes saber la respuesta a tus preguntas con datos existentes? No investigues por inercia. Investiga para reducir incertidumbre relevante.</p>
+    </article>
+
+    <article class="card">
+      <div class="highlight-bar" aria-hidden="true"></div>
+      <h2 class="card-question">02/ ¿El impacto justifica investigar?</h2>
+      <p class="card-body">¿Esta decisión afecta al negocio, a las personas usuarias o al producto de forma relevante?</p>
+    </article>
+
+    <article class="card">
+      <div class="highlight-bar" aria-hidden="true"></div>
+      <h2 class="card-question">03/ ¿Qué quieres aprender?</h2>
+      <p class="card-body">Tener objetivos claros conduce a mejores resultados.</p>
+    </article>
+
+    <article class="card">
+      <div class="highlight-bar" aria-hidden="true"></div>
+      <h2 class="card-question">04/ ¿Estás alineado con stakeholders?</h2>
+      <p class="card-body">Es importante entender si todas las personas involucradas en el proyecto entienden el problema de la misma manera y tienen las mismas expectativas.</p>
+    </article>
+
+  </section>
+</main>
+
+<script>
+  const cards = document.querySelectorAll('.card');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        const idx = Array.from(cards).indexOf(entry.target);
+        setTimeout(() => entry.target.classList.add('visible'), idx * 100);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  cards.forEach(c => observer.observe(c));
+</script>
+</body>
+</html>

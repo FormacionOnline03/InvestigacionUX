@@ -1,0 +1,1022 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta charset="utf-8"/>
+<title>Guía de Identidad Visual – Recursos de Investigación UX</title>
+<style>
+@font-face {
+    font-family: 'BaltoBold';
+    src: url('fonts/Balto-Bold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+  }
+</style>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --purple: #caaeff;
+    --purple-light: rgba(202,174,255,0.12);
+    --purple-mid: rgba(202,174,255,0.35);
+    --gray: #e5e5e5;
+    --white: #ffffff;
+    --black: #000000;
+    --radius: 10px;
+    --font: 'SF Pro Display', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    --font-balto: 'BaltoBold', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font);
+    color: var(--black);
+    background: var(--white);
+    line-height: 1.5;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    padding: 80px 100px 64px;
+    border-bottom: 1px solid #f0f0f0;
+  }
+
+  .header-tag {
+    width: 60px;
+    height: 12px;
+    background: var(--purple);
+    border-radius: 2px;
+    margin-bottom: 32px;
+  }
+
+  .header-label {
+    font-size: 18px;
+    color: #999;
+    margin-bottom: 16px;
+  }
+
+  .header-title {
+    font-family: var(--font-balto);
+    font-size: 64px;
+    font-weight: 700;
+    line-height: 1.0;
+    max-width: 800px;
+    margin-bottom: 24px;
+  }
+
+  .header-desc {
+    font-size: 20px;
+    color: #555;
+    max-width: 600px;
+    line-height: 1.6;
+  }
+
+  /* ── NAV ── */
+  .nav {
+    position: sticky;
+    top: 0;
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid #f0f0f0;
+    padding: 0 100px;
+    display: flex;
+    gap: 0;
+    z-index: 100;
+  }
+
+  .nav a {
+    font-size: 15px;
+    color: #999;
+    text-decoration: none;
+    padding: 20px 24px;
+    border-bottom: 2px solid transparent;
+    transition: color 0.15s, border-color 0.15s;
+  }
+
+  .nav a:hover {
+    color: var(--black);
+    border-bottom-color: var(--purple);
+  }
+
+  /* ── SECTIONS ── */
+  .section {
+    padding: 80px 100px;
+    border-bottom: 1px solid #f0f0f0;
+  }
+
+  .section-tag {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #bbb;
+    margin-bottom: 16px;
+  }
+
+  .section-title {
+    font-family: var(--font-balto);
+    font-size: 40px;
+    font-weight: 700;
+    margin-bottom: 48px;
+    line-height: 1.1;
+  }
+
+  /* ── COLOR ── */
+  .color-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+  }
+
+  .color-card {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .color-swatch {
+    width: 100%;
+    height: 120px;
+    border-radius: var(--radius);
+    border: 1px solid rgba(0,0,0,0.06);
+  }
+
+  .color-name {
+    font-family: var(--font-balto);
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  .color-hex {
+    font-size: 15px;
+    color: #888;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+  }
+
+  .color-use {
+    font-size: 14px;
+    color: #aaa;
+    line-height: 1.5;
+  }
+
+  /* ── TYPOGRAPHY ── */
+  .type-samples {
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+  }
+
+  .type-row {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 40px;
+    align-items: start;
+    padding-bottom: 48px;
+    border-bottom: 1px solid #f0f0f0;
+  }
+
+  .type-row:last-child { border-bottom: none; padding-bottom: 0; }
+
+  .type-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding-top: 8px;
+  }
+
+  .type-meta-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: #bbb;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .type-meta-detail {
+    font-size: 13px;
+    color: #ccc;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+  }
+
+  .type-sample-sidebar-title {
+    font-family: var(--font-balto);
+    font-size: 38px;
+    font-weight: 700;
+    line-height: 1.1;
+  }
+
+  .type-sample-label {
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 1.3;
+  }
+
+  .type-sample-body {
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 1.6;
+    color: #444;
+  }
+
+  .type-sample-card {
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 1.4;
+  }
+
+  .type-sample-col-header {
+    font-family: var(--font-balto);
+    font-size: 27px;
+    font-weight: 700;
+    letter-spacing: 0;
+  }
+
+  .type-sample-small {
+    font-size: 13px;
+    font-weight: 400;
+    color: #999;
+  }
+
+  /* ── SPACING ── */
+  .spacing-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .spacing-row {
+    display: grid;
+    grid-template-columns: 120px 1fr 80px;
+    gap: 24px;
+    align-items: center;
+  }
+
+  .spacing-bar-wrap {
+    height: 24px;
+    background: #f5f5f5;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .spacing-bar {
+    height: 100%;
+    background: var(--purple);
+    border-radius: 4px;
+  }
+
+  .spacing-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #888;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+  }
+
+  .spacing-px {
+    font-size: 14px;
+    color: #bbb;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    text-align: right;
+  }
+
+  /* ── COMPONENTS ── */
+  .components-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+  }
+
+  .component-block {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .component-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #bbb;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .component-demo {
+    padding: 32px;
+    background: #fafafa;
+    border-radius: 16px;
+    border: 1px solid #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 120px;
+  }
+
+  .component-desc {
+    font-size: 14px;
+    color: #aaa;
+    line-height: 1.6;
+  }
+
+  /* Demo components matching actual UI */
+  .demo-card {
+    background: var(--gray);
+    border-radius: var(--radius);
+    padding: 20px 22px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    width: 100%;
+  }
+
+  .demo-card-text {
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 1.4;
+    flex: 1;
+  }
+
+  .demo-card-icon {
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+  }
+
+  .demo-drop-empty {
+    border: 2px dashed rgba(150,100,255,0.35);
+    background: rgba(202,174,255,0.12);
+    border-radius: var(--radius);
+    padding: 20px 22px;
+    font-size: 18px;
+    color: var(--black);
+    width: 100%;
+    min-height: 70px;
+    display: flex;
+    align-items: center;
+  }
+
+  .demo-drop-correct {
+    background: #b8f5d0;
+    box-shadow: 0 0 0 2px #52d68a;
+    border-radius: var(--radius);
+    padding: 20px 22px;
+    font-size: 18px;
+    width: 100%;
+    min-height: 70px;
+    display: flex;
+    align-items: center;
+  }
+
+  .demo-drop-incorrect {
+    background: #ffd6d6;
+    box-shadow: 0 0 0 2px #ff7070;
+    border-radius: var(--radius);
+    padding: 20px 22px;
+    font-size: 18px;
+    width: 100%;
+    min-height: 70px;
+    display: flex;
+    align-items: center;
+  }
+
+  .demo-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--black);
+    color: var(--white);
+    border: none;
+    border-radius: var(--radius);
+    padding: 18px 32px;
+    font-size: 20px;
+    font-family: var(--font);
+    font-weight: 400;
+    cursor: default;
+  }
+
+  .demo-btn svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  .demo-sidebar-tag {
+    width: 60px;
+    height: 12px;
+    background: var(--purple);
+    border-radius: 2px;
+  }
+
+  .demo-progress-bar {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .demo-progress-label {
+    font-size: 13px;
+    color: #999;
+  }
+
+  .demo-progress-track {
+    height: 4px;
+    background: #eee;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .demo-progress-fill {
+    height: 100%;
+    background: var(--purple);
+    border-radius: 2px;
+    width: 57%;
+  }
+
+  .demo-progress-count {
+    font-size: 13px;
+    color: #999;
+  }
+
+  /* ── LAYOUT PATTERNS ── */
+  .layout-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+  }
+
+  .layout-diagram {
+    border: 1px solid #f0f0f0;
+    border-radius: 16px;
+    overflow: hidden;
+    aspect-ratio: 16/9;
+    display: flex;
+    position: relative;
+  }
+
+  .layout-sidebar-demo {
+    width: 30%;
+    background: #f8f8f8;
+    border-right: 1px solid #f0f0f0;
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
+    gap: 8px;
+  }
+
+  .layout-main-demo {
+    flex: 1;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .layout-block {
+    border-radius: 6px;
+  }
+
+  .layout-label-diagram {
+    position: absolute;
+    bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 12px;
+    color: #bbb;
+    white-space: nowrap;
+    font-family: 'SF Mono', monospace;
+  }
+
+  /* ── ICON ── */
+  .icon-section {
+    display: flex;
+    align-items: center;
+    gap: 48px;
+  }
+
+  .icon-demo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .icon-bg-white, .icon-bg-black {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #eee;
+  }
+
+  .icon-bg-black { background: #000; border-color: #000; }
+
+  .icon-caption {
+    font-size: 13px;
+    color: #bbb;
+    text-align: center;
+  }
+
+  .icon-desc {
+    max-width: 500px;
+    font-size: 16px;
+    color: #555;
+    line-height: 1.7;
+  }
+
+  /* ── MOTION ── */
+  .motion-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+
+  .motion-card {
+    padding: 28px 24px;
+    background: #fafafa;
+    border-radius: 16px;
+    border: 1px solid #f0f0f0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .motion-name {
+    font-family: var(--font-balto);
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  .motion-detail {
+    font-size: 13px;
+    color: #bbb;
+    font-family: 'SF Mono', monospace;
+    line-height: 1.6;
+  }
+
+  .motion-use {
+    font-size: 14px;
+    color: #888;
+    line-height: 1.5;
+    margin-top: 4px;
+  }
+
+  /* ── FOOTER ── */
+  .footer {
+    padding: 48px 100px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .footer-tag {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .footer-note {
+    font-size: 14px;
+    color: #bbb;
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-tag"></div>
+  <div class="header-label">Documento de identidad visual</div>
+  <h1 class="header-title">Sistema de diseño<br>Recursos UX</h1>
+  <p class="header-desc">Guía de referencia visual y de componentes aplicada en las tareas interactivas de investigación UX.</p>
+</header>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="#color">Color</a>
+  <a href="#tipografia">Tipografía</a>
+  <a href="#espaciado">Espaciado</a>
+  <a href="#componentes">Componentes</a>
+  <a href="#layout">Layout</a>
+  <a href="#iconos">Iconografía</a>
+  <a href="#motion">Motion</a>
+</nav>
+
+<!-- ══ 1. COLOR ══ -->
+<section class="section" id="color">
+  <div class="section-tag">01</div>
+  <h2 class="section-title">Color</h2>
+  <div class="color-grid">
+
+    <div class="color-card">
+      <div class="color-swatch" style="background:#caaeff;"></div>
+      <div class="color-name">Purple</div>
+      <div class="color-hex">#caaeff</div>
+      <div class="color-use">Color principal de marca. Usado en: tag decorativo del sidebar, drop zones vacías, barra de progreso, placeholder de imagen, drop zones correctas (con opacidad).</div>
+    </div>
+
+    <div class="color-card">
+      <div class="color-swatch" style="background:#e5e5e5;"></div>
+      <div class="color-name">Gray</div>
+      <div class="color-hex">#e5e5e5</div>
+      <div class="color-use">Fondo de las cards arrastrables. Neutro que no compite con el color de las zonas de drop.</div>
+    </div>
+
+    <div class="color-card">
+      <div class="color-swatch" style="background:#000000;"></div>
+      <div class="color-name">Black</div>
+      <div class="color-hex">#000000</div>
+      <div class="color-use">Texto principal, botones de acción (CTA), icono del botón de card.</div>
+    </div>
+
+    <div class="color-card">
+      <div class="color-swatch" style="background:#ffffff; border: 1px solid #f0f0f0;"></div>
+      <div class="color-name">White</div>
+      <div class="color-hex">#ffffff</div>
+      <div class="color-use">Fondo global de la aplicación. Fondo de texto en cards colocadas en drop zones.</div>
+    </div>
+
+    <div class="color-card">
+      <div class="color-swatch" style="background:#b8f5d0;"></div>
+      <div class="color-name">Green feedback</div>
+      <div class="color-hex">#b8f5d0 · stroke #52d68a</div>
+      <div class="color-use">Feedback visual de respuesta correcta. Aparece en la animación de shake verde al soltar una card en la zona correcta.</div>
+    </div>
+
+    <div class="color-card">
+      <div class="color-swatch" style="background:#ffd6d6;"></div>
+      <div class="color-name">Red feedback</div>
+      <div class="color-hex">#ffd6d6 · stroke #ff7070</div>
+      <div class="color-use">Feedback visual de respuesta incorrecta. Acompaña la animación de shake rojo.</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══ 2. TIPOGRAFÍA ══ -->
+<section class="section" id="tipografia">
+  <div class="section-tag">02</div>
+  <h2 class="section-title">Tipografía</h2>
+  <div class="type-samples">
+
+    <div class="type-row">
+      <div class="type-meta">
+        <div class="type-meta-name">Balto Bold</div>
+        <div class="type-meta-detail">font-weight: 700<br>Títulos y cabeceras</div>
+      </div>
+      <div>
+        <div class="type-sample-sidebar-title">Estructura el proceso antes de empezar</div>
+      </div>
+    </div>
+
+    <div class="type-row">
+      <div class="type-meta">
+        <div class="type-meta-name">Balto Bold</div>
+        <div class="type-meta-detail">27px · col-header</div>
+      </div>
+      <div class="type-sample-col-header">Descripción</div>
+    </div>
+
+    <div class="type-row">
+      <div class="type-meta">
+        <div class="type-meta-name">SF Pro Display</div>
+        <div class="type-meta-detail">24px · sidebar-label</div>
+      </div>
+      <div class="type-sample-label">Tarea 01</div>
+    </div>
+
+    <div class="type-row">
+      <div class="type-meta">
+        <div class="type-meta-name">SF Pro Display</div>
+        <div class="type-meta-detail">24px · card-text<br>drop-zone-label</div>
+      </div>
+      <div class="type-sample-card">Establecer objetivos, preguntas e hipótesis</div>
+    </div>
+
+    <div class="type-row">
+      <div class="type-meta">
+        <div class="type-meta-name">SF Pro Display</div>
+        <div class="type-meta-detail">20px · sidebar-desc</div>
+      </div>
+      <div class="type-sample-body">Arrastra cada fase al recuadro que corresponde para que todo el proceso tenga sentido como flujo real de trabajo.</div>
+    </div>
+
+    <div class="type-row">
+      <div class="type-meta">
+        <div class="type-meta-name">SF Pro Display</div>
+        <div class="type-meta-detail">13px · labels<br>progress</div>
+      </div>
+      <div class="type-sample-small">Progreso · 4 de 7 completadas</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══ 3. ESPACIADO ══ -->
+<section class="section" id="espaciado">
+  <div class="section-tag">03</div>
+  <h2 class="section-title">Espaciado</h2>
+  <div class="spacing-grid">
+    <div class="spacing-row">
+      <div class="spacing-label">screen-padding</div>
+      <div class="spacing-bar-wrap"><div class="spacing-bar" style="width:100%"></div></div>
+      <div class="spacing-px">100px</div>
+    </div>
+    <div class="spacing-row">
+      <div class="spacing-label">sidebar-pad</div>
+      <div class="spacing-bar-wrap"><div class="spacing-bar" style="width:64%"></div></div>
+      <div class="spacing-px">64px</div>
+    </div>
+    <div class="spacing-row">
+      <div class="spacing-label">col-header-top</div>
+      <div class="spacing-bar-wrap"><div class="spacing-bar" style="width:50%"></div></div>
+      <div class="spacing-px">50px</div>
+    </div>
+    <div class="spacing-row">
+      <div class="spacing-label">task-padding</div>
+      <div class="spacing-bar-wrap"><div class="spacing-bar" style="width:56%"></div></div>
+      <div class="spacing-px">56px</div>
+    </div>
+    <div class="spacing-row">
+      <div class="spacing-label">card-padding</div>
+      <div class="spacing-bar-wrap"><div class="spacing-bar" style="width:22%"></div></div>
+      <div class="spacing-px">20px 22px</div>
+    </div>
+    <div class="spacing-row">
+      <div class="spacing-label">gap-cards</div>
+      <div class="spacing-bar-wrap"><div class="spacing-bar" style="width:16%"></div></div>
+      <div class="spacing-px">16px</div>
+    </div>
+    <div class="spacing-row">
+      <div class="spacing-label">col-divider</div>
+      <div class="spacing-bar-wrap"><div class="spacing-bar" style="width:40%"></div></div>
+      <div class="spacing-px">40px</div>
+    </div>
+    <div class="spacing-row">
+      <div class="spacing-label">border-radius</div>
+      <div class="spacing-bar-wrap"><div class="spacing-bar" style="width:10%"></div></div>
+      <div class="spacing-px">10px</div>
+    </div>
+    <div class="spacing-row">
+      <div class="spacing-label">sidebar-w (task)</div>
+      <div class="spacing-bar-wrap"><div class="spacing-bar" style="width:34%"></div></div>
+      <div class="spacing-px">340px</div>
+    </div>
+    <div class="spacing-row">
+      <div class="spacing-label">sidebar-w (intro)</div>
+      <div class="spacing-bar-wrap"><div class="spacing-bar" style="width:60%"></div></div>
+      <div class="spacing-px">600px</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 4. COMPONENTES ══ -->
+<section class="section" id="componentes">
+  <div class="section-tag">04</div>
+  <h2 class="section-title">Componentes</h2>
+  <div class="components-grid">
+
+    <div class="component-block">
+      <div class="component-label">Card arrastrable</div>
+      <div class="component-demo">
+        <div class="demo-card">
+          <span class="demo-card-text">Establecer objetivos, preguntas e hipótesis</span>
+          <span class="demo-card-icon">
+            <svg viewBox="0 0 46 46" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:36px;height:36px">
+              <circle cx="22.8082" cy="22.8082" r="22.5655" stroke="black" stroke-width="0.485281"/>
+              <path d="M17.4701 28.6316L28.6315 16.9848M28.6315 28.6316V16.9848H17.4701" stroke="black" stroke-width="2.4264"/>
+            </svg>
+          </span>
+        </div>
+      </div>
+      <div class="component-desc">Fondo #e5e5e5 · border-radius 10px · padding 20px 22px · font-size 24px. Cursor grab. Hover: translateY(-2px) + shadow.</div>
+    </div>
+
+    <div class="component-block">
+      <div class="component-label">Drop zone — vacía</div>
+      <div class="component-demo">
+        <div class="demo-drop-empty">Definición</div>
+      </div>
+      <div class="component-desc">Border dashed 2px rgba(150,100,255,0.35) · background rgba(202,174,255,0.12) · font-size 24px.</div>
+    </div>
+
+    <div class="component-block">
+      <div class="component-label">Drop zone — correcta</div>
+      <div class="component-demo">
+        <div class="demo-drop-correct">Establecer objetivos, preguntas e hipótesis</div>
+      </div>
+      <div class="component-desc">Background #b8f5d0 · box-shadow 0 0 0 2px #52d68a. Animación shake verde 0.35s.</div>
+    </div>
+
+    <div class="component-block">
+      <div class="component-label">Drop zone — incorrecta</div>
+      <div class="component-demo">
+        <div class="demo-drop-incorrect">Realizar el trabajo de campo</div>
+      </div>
+      <div class="component-desc">Background #ffd6d6 · box-shadow 0 0 0 2px #ff7070. Animación shake rojo 0.35s. Vuelve al estado vacío tras 600ms.</div>
+    </div>
+
+    <div class="component-block">
+      <div class="component-label">Botón CTA</div>
+      <div class="component-demo">
+        <div class="demo-btn">
+          Iniciar tarea
+          <svg viewBox="0 0 46 46" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:22px;height:22px">
+            <circle cx="22.8082" cy="22.8082" r="22.5655" stroke="white" stroke-width="0.485281"/>
+            <path d="M17.4701 28.6316L28.6315 16.9848M28.6315 28.6316V16.9848H17.4701" stroke="white" stroke-width="2.4264"/>
+          </svg>
+        </div>
+      </div>
+      <div class="component-desc">Background #000 · color #fff · padding 18px 32px · font-size 20px · border-radius 10px. Hover: #333, translateY(-4px), shadow 40px.</div>
+    </div>
+
+    <div class="component-block">
+      <div class="component-label">Sidebar tag + progreso</div>
+      <div class="component-demo" style="flex-direction: column; gap: 20px; align-items: flex-start;">
+        <div class="demo-sidebar-tag"></div>
+        <div class="demo-progress-bar">
+          <div class="demo-progress-label">Progreso</div>
+          <div class="demo-progress-track"><div class="demo-progress-fill"></div></div>
+          <div class="demo-progress-count">4 de 7 completadas</div>
+        </div>
+      </div>
+      <div class="component-desc">Tag: 60×12px · background #caaeff. Barra: 4px height · background #caaeff · transition width 0.4s ease.</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══ 5. LAYOUT ══ -->
+<section class="section" id="layout">
+  <div class="section-tag">05</div>
+  <h2 class="section-title">Patrones de layout</h2>
+  <div class="layout-grid">
+
+    <div class="component-block">
+      <div class="component-label">Pantalla introducción</div>
+      <div class="layout-diagram">
+        <div class="layout-sidebar-demo" style="width:35%">
+          <div class="layout-block" style="height:8px;background:#caaeff;width:36px;border-radius:2px;margin-bottom:8px;"></div>
+          <div class="layout-block" style="height:10px;background:#e5e5e5;width:60%;border-radius:3px;margin-bottom:6px;"></div>
+          <div class="layout-block" style="height:28px;background:#000;width:80%;border-radius:4px;margin-bottom:auto;"></div>
+          <div class="layout-block" style="height:60px;background:linear-gradient(135deg,#f0e6ff,#caaeff);border-radius:6px;width:100%;"></div>
+        </div>
+        <div class="layout-main-demo">
+          <div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:16px;padding:8px">
+            <div class="layout-block" style="height:8px;background:#e5e5e5;width:100%;border-radius:3px;"></div>
+            <div class="layout-block" style="height:8px;background:#e5e5e5;width:90%;border-radius:3px;"></div>
+            <div class="layout-block" style="height:8px;background:#e5e5e5;width:95%;border-radius:3px;"></div>
+            <div class="layout-block" style="height:28px;background:#000;width:50%;border-radius:6px;margin-top:8px;"></div>
+          </div>
+        </div>
+        <div class="layout-label-diagram">sidebar 600px · padding 100px · intro-main centrado</div>
+      </div>
+      <div class="component-desc">Screen padding 100px. Sidebar card 600px × 100% height. justify-content: space-between para separar texto e imagen.</div>
+    </div>
+
+    <div class="component-block">
+      <div class="component-label">Pantalla tarea (drag & drop)</div>
+      <div class="layout-diagram">
+        <div class="layout-sidebar-demo" style="width:20%">
+          <div class="layout-block" style="height:6px;background:#caaeff;width:28px;border-radius:2px;margin-bottom:6px;"></div>
+          <div class="layout-block" style="height:8px;background:#e5e5e5;width:70%;border-radius:3px;margin-bottom:4px;"></div>
+          <div class="layout-block" style="height:18px;background:#222;width:80%;border-radius:3px;margin-bottom:auto;"></div>
+          <div class="layout-block" style="height:4px;background:#caaeff;width:100%;border-radius:2px;"></div>
+        </div>
+        <div class="layout-main-demo" style="flex-direction:row;gap:8px;padding:12px;">
+          <div style="flex:1;display:flex;flex-direction:column;gap:6px;">
+            <div class="layout-block" style="height:28px;background:#e5e5e5;border-radius:5px;"></div>
+            <div class="layout-block" style="height:28px;background:#e5e5e5;border-radius:5px;"></div>
+            <div class="layout-block" style="height:28px;background:#e5e5e5;border-radius:5px;"></div>
+          </div>
+          <div style="width:1px;background:#f0f0f0;flex-shrink:0;"></div>
+          <div style="flex:1;display:flex;flex-direction:column;gap:6px;">
+            <div class="layout-block" style="height:28px;background:rgba(202,174,255,0.18);border:1.5px dashed rgba(150,100,255,0.3);border-radius:5px;"></div>
+            <div class="layout-block" style="height:28px;background:rgba(202,174,255,0.18);border:1.5px dashed rgba(150,100,255,0.3);border-radius:5px;"></div>
+            <div class="layout-block" style="height:28px;background:#b8f5d0;border-radius:5px;"></div>
+          </div>
+        </div>
+        <div class="layout-label-diagram">sidebar 340px · col-divider 1px · scroll global</div>
+      </div>
+      <div class="component-desc">Sidebar fijo 340px. Dos columnas flexibles separadas por divider 1px. Scroll único global en task-main al hacer hover.</div>
+    </div>
+
+    <div class="component-block">
+      <div class="component-label">Pantalla tarea (matriz 2×2)</div>
+      <div class="layout-diagram">
+        <div class="layout-sidebar-demo" style="width:20%">
+          <div class="layout-block" style="height:6px;background:#caaeff;width:28px;border-radius:2px;margin-bottom:6px;"></div>
+          <div class="layout-block" style="height:8px;background:#e5e5e5;width:70%;border-radius:3px;margin-bottom:4px;"></div>
+          <div class="layout-block" style="height:18px;background:#222;width:80%;border-radius:3px;margin-bottom:auto;"></div>
+          <div class="layout-block" style="height:4px;background:#caaeff;width:100%;border-radius:2px;"></div>
+        </div>
+        <div class="layout-main-demo" style="gap:6px;padding:10px;">
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:5px;flex-shrink:0;">
+            <div class="layout-block" style="height:20px;background:#e5e5e5;border-radius:4px;"></div>
+            <div class="layout-block" style="height:20px;background:#e5e5e5;border-radius:4px;"></div>
+            <div class="layout-block" style="height:20px;background:#e5e5e5;border-radius:4px;"></div>
+          </div>
+          <div style="flex:1;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:4px;min-height:0;">
+            <div class="layout-block" style="background:rgba(202,174,255,0.15);border-radius:4px;"></div>
+            <div class="layout-block" style="background:rgba(202,174,255,0.15);border-radius:4px;"></div>
+            <div class="layout-block" style="background:rgba(202,174,255,0.15);border-radius:4px;"></div>
+            <div class="layout-block" style="background:rgba(202,174,255,0.15);border-radius:4px;"></div>
+          </div>
+        </div>
+        <div class="layout-label-diagram">grid 3×2 cards · matrix 2×2 · ejes exteriores</div>
+      </div>
+      <div class="component-desc">Bloque X: grid 3 columnas. Bloque Y: matriz 2×2 con etiquetas de eje fuera de los cuadrantes (top, bottom, left, right).</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══ 6. ICONOGRAFÍA ══ -->
+<section class="section" id="iconos">
+  <div class="section-tag">06</div>
+  <h2 class="section-title">Iconografía</h2>
+  <div class="icon-section">
+    <div class="icon-demo">
+      <div class="icon-bg-white">
+        <svg width="36" height="36" viewBox="0 0 46 46" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="22.8082" cy="22.8082" r="22.5655" stroke="black" stroke-width="0.485281"/>
+          <path d="M17.4701 28.6316L28.6315 16.9848M28.6315 28.6316V16.9848H17.4701" stroke="black" stroke-width="2.4264"/>
+        </svg>
+      </div>
+      <div class="icon-caption">Sobre fondo claro</div>
+    </div>
+    <div class="icon-demo">
+      <div class="icon-bg-black">
+        <svg width="36" height="36" viewBox="0 0 46 46" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="22.8082" cy="22.8082" r="22.5655" stroke="white" stroke-width="0.485281"/>
+          <path d="M17.4701 28.6316L28.6315 16.9848M28.6315 28.6316V16.9848H17.4701" stroke="white" stroke-width="2.4264"/>
+        </svg>
+      </div>
+      <div class="icon-caption">Sobre fondo oscuro</div>
+    </div>
+    <div class="icon-desc">
+      <p>Icono único del sistema: flecha diagonal en círculo. Se usa como indicador de acción en todas las cards arrastrables y en los botones CTA.</p>
+      <br>
+      <p style="color:#aaa;font-size:14px;">Tamaño en cards: 36×36px · Tamaño en botones: 22×22px<br>Stroke black sobre gris claro · Stroke white sobre negro</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 7. MOTION ══ -->
+<section class="section" id="motion">
+  <div class="section-tag">07</div>
+  <h2 class="section-title">Motion & animaciones</h2>
+  <div class="motion-grid">
+
+    <div class="motion-card">
+      <div class="motion-name">Screen transition</div>
+      <div class="motion-detail">opacity: 0→1<br>translateY: 16px→0<br>duration: 0.4s ease</div>
+      <div class="motion-use">Transición entre pantalla de intro y pantalla de tarea al pulsar "Iniciar tarea".</div>
+    </div>
+
+    <div class="motion-card">
+      <div class="motion-name">Card hover</div>
+      <div class="motion-detail">translateY: -2px<br>box-shadow: 0 8px 24px rgba(0,0,0,0.07)<br>duration: 0.15s ease</div>
+      <div class="motion-use">Elevación sutil al pasar el cursor sobre una card arrastrable.</div>
+    </div>
+
+    <div class="motion-card">
+      <div class="motion-name">Shake correcto</div>
+      <div class="motion-detail">translateX: 0 → -6px → 6px → 0<br>background: #b8f5d0<br>duration: 0.35s ease</div>
+      <div class="motion-use">Feedback al colocar una card en la zona correcta. Vibración verde.</div>
+    </div>
+
+    <div class="motion-card">
+      <div class="motion-name">Shake incorrecto</div>
+      <div class="motion-detail">translateX: 0 → -6px → 6px → 0<br>background: #ffd6d6<br>duration: 0.35s ease</div>
+      <div class="motion-use">Feedback al colocar una card en zona incorrecta. Vibración roja. Revierte tras 600ms.</div>
+    </div>
+
+    <div class="motion-card">
+      <div class="motion-name">Button hover</div>
+      <div class="motion-detail">background: #000 → #333<br>translateY: -4px<br>box-shadow: 0 16px 40px rgba(0,0,0,0.25)<br>duration: 0.2s ease</div>
+      <div class="motion-use">Hover pronunciado en botones CTA ("Iniciar tarea", "Reiniciar").</div>
+    </div>
+
+    <div class="motion-card">
+      <div class="motion-name">Progress fill</div>
+      <div class="motion-detail">width: 0% → n%<br>duration: 0.4s ease<br>trigger: on correct drop</div>
+      <div class="motion-use">La barra de progreso se anima cada vez que se coloca correctamente una card.</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-tag">
+    <div style="width:40px;height:8px;background:var(--purple);border-radius:2px;"></div>
+    <span style="font-size:14px;color:#bbb;">Sistema de diseño · Recursos UX</span>
+  </div>
+  <div class="footer-note">Balto Bold · SF Pro Display · #caaeff</div>
+</footer>
+
+</body>
+</html>
