@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mensajes · Mountain Bank</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #ffffff; --white: #FFFFFF; --user-bubble: rgba(255,255,255,0.67);
+    --border: #E8E8E8; --text: #1A1A1A; --text-muted: #999999;
+    --progress: #C8BBA8; --radius-lg: 20px; --radius-md: 12px; --radius-pill: 20px;
+  }
+  html, body { height: 100%; overflow: hidden; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', sans-serif; font-size: 17px; line-height: 1.65; font-weight: 400; color: var(--text); background: var(--bg); display: flex; align-items: center; justify-content: center; -webkit-font-smoothing: antialiased; }
+  .window { background: var(--bg); border-radius: var(--radius-lg); width: calc(100vw - 48px); max-width: 1137px; height: calc(100vh - 48px); max-height: 860px; display: flex; flex-direction: column; box-shadow: 0 8px 40px rgba(0,0,0,0.16), 0 0 0 1px rgba(0,0,0,0.07); overflow: hidden; }
+  .titlebar { flex-shrink: 0; background: rgba(214,218,217,0.25); height: 44px; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid rgba(0,0,0,0.06); position: relative; }
+  .window-controls { position: absolute; left: 14px; display: flex; gap: 7px; align-items: center; }
+  .dot { width: 13px; height: 13px; border-radius: 50%; box-shadow: 0 0 0 0.8px rgba(0,0,0,0.1); }
+  .dot-red { background: #FF736A; } .dot-yellow { background: #FFCC00; } .dot-green { background: #19C332; }
+  .titlebar-title { font-size: 13px; font-weight: 600; color: #4d4d4d; }
+  .content { flex: 1; overflow-y: auto; overflow-x: hidden; padding: 40px 32px 40px; display: flex; flex-direction: column; gap: 28px; max-width: 1000px; width: 100%; margin: 0 auto; scrollbar-width: thin; scrollbar-color: rgba(0,0,0,0.12) transparent; }
+  .content::-webkit-scrollbar { width: 4px; } .content::-webkit-scrollbar-track { background: transparent; } .content::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.12); border-radius: 4px; }
+  .msg-row { display: flex; align-items: flex-start; gap: 16px; padding-right: 200px; opacity: 0; transform: translateY(8px); transition: opacity 0.32s ease, transform 0.32s ease; }
+  .msg-row.visible { opacity: 1; transform: translateY(0); }
+  .msg-row.right { flex-direction: row-reverse; padding-right: 0; padding-left: 200px; }
+  .avatar { flex-shrink: 0; width: 60px; height: 60px; border-radius: 10px; background: #E1DACC; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 700; color: #7A6E5F; margin-top: 2px; }
+  .simon-group { display: flex; flex-direction: column; gap: 10px; flex: 1; min-width: 0; }
+  .plain { font-size: 24px; line-height: 1.6; color: var(--text); max-width: 650px; }
+  .bubble { background: var(--user-bubble); border-radius: var(--radius-pill); padding: 30px 40px; font-size: 24px; line-height: 1.4; color: var(--text); max-width: 72%; }
+  .typing-dots { display: flex; gap: 6px; align-items: center; padding: 6px 0; }
+  .typing-dots span { width: 8px; height: 8px; border-radius: 50%; background: #BBBBBB; animation: blink 1.2s infinite; }
+  .typing-dots span:nth-child(2) { animation-delay: 0.2s; } .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes blink { 0%,80%,100% { opacity: 0.25; transform: scale(0.85); } 40% { opacity: 1; transform: scale(1); } }
+  .options-label { font-size: 15px; font-weight: 500; color: var(--text-muted); text-align: center; letter-spacing: 0.03em; opacity: 0; transition: opacity 0.32s ease; }
+  .options-label.visible { opacity: 1; }
+  .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 600px) { .options-grid { grid-template-columns: 1fr; } }
+  .option-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 50px 30px; cursor: pointer; opacity: 0; transform: translateY(8px); transition: opacity 0.32s ease, transform 0.32s ease, border-color 0.15s; }
+  .option-card.visible { opacity: 1; transform: translateY(0); }
+  .option-card:hover:not(.selected):not(.disabled) { border-color: #BBBBBB; }
+  .option-card.selected { border-color: #19C332; background: #F5FBF6; }
+  .option-card.disabled { cursor: default; opacity: 0.45; }
+  .option-tag { font-size: 24px; font-weight: 500; color: var(--text-muted); margin-bottom: 10px; }
+  .option-text { font-size: 24px; line-height: 1.4; color: var(--text); }
+  .hidden { display: none !important; }
+</style>
+</head>
+<body>
+<div class="window">
+  <div class="titlebar">
+    <div class="window-controls">
+      <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+    </div>
+    <span class="titlebar-title">Mensajes</span>
+  </div>
+  <div class="content" id="chatContent">
+
+    <!-- 1. Simón pregunta inicial -->
+    <div class="msg-row" id="row-simon-q1">
+      <div class="avatar">S</div>
+      <div class="plain">A partir de lo que sabemos, necesitamos formular una hipótesis. Recuerda que una hipótesis es una posible explicación, pero no es una verdad; se tiene que poder comprobar.</div>
+    </div>
+
+    <!-- 2. Options label 1 -->
+    <div class="options-label hidden" id="optionsLabel1">Elige tu respuesta</div>
+
+    <!-- 3. Options grid 1 -->
+    <div class="options-grid hidden" id="optionsGrid1">
+      <div class="option-card" role="button" tabindex="0" onclick="selectOption1(this)" onkeydown="if(event.key==='Enter')selectOption1(this)">
+        <div class="option-tag">Opción 1</div>
+        <div class="option-text">Propongo esta hipótesis: las personas usuarias abandonan el proceso de onboarding en el último paso porque la aplicación solicita información innecesaria sobre las acciones que planean realizar a corto, mediano y largo plazo para alcanzar sus metas de ahorro.</div>
+      </div>
+      <div class="option-card" role="button" tabindex="0" onclick="selectOption1(this)" onkeydown="if(event.key==='Enter')selectOption1(this)">
+        <div class="option-tag">Opción 2</div>
+        <div class="option-text">Propongo esta hipótesis: las personas usuarias abandonan el proceso de onboarding en el último paso porque la aplicación solicita información innecesaria sobre las acciones que planean realizar a corto, mediano y largo plazo para alcanzar sus metas de ahorro.</div>
+      </div>
+    </div>
+
+    <!-- 4. Typing r1 -->
+    <div class="msg-row hidden" id="row-typing-r1">
+      <div class="avatar">S</div>
+      <div class="typing-dots"><span></span><span></span><span></span></div>
+    </div>
+
+    <!-- 5. Simón r1 -->
+    <div class="msg-row hidden" id="row-simon-r1">
+      <div class="avatar">S</div>
+      <div class="plain">Decir que "la experiencia es mala" y que "estamos pidiendo muchos datos innecesarios" no es una hipótesis medible que se pueda validar, ya que una buena hipótesis debe ser clara, específica, basada en señales y validable.</div>
+    </div>
+
+    <!-- 6. Typing r2 -->
+    <div class="msg-row hidden" id="row-typing-r2">
+      <div class="avatar">S</div>
+      <div class="typing-dots"><span></span><span></span><span></span></div>
+    </div>
+
+    <!-- 7. Simón r2 -->
+    <div class="msg-row hidden" id="row-simon-r2">
+      <div class="avatar">S</div>
+      <div class="plain">La hipótesis que sostiene que las personas usuarias abandonan el proceso de onboarding en el último paso porque la aplicación solicita información innecesaria sobre las acciones que planean realizar a corto, mediano y largo plazo para alcanzar sus metas de ahorro es sólida porque está basada en datos, plantea una causa concreta y se puede validar. Esto nos permite diseñar la investigación correctamente.</div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const chat = document.getElementById('chatContent');
+
+function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+function show(id, ms) {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      const el = document.getElementById(id);
+      if (!el) { resolve(); return; }
+      el.classList.remove('hidden');
+      requestAnimationFrame(() => { el.classList.add('visible'); scrollBottom(); resolve(); });
+    }, ms);
+  });
+}
+
+function hide(id) {
+  const el = document.getElementById(id);
+  if (el) { el.classList.add('hidden'); el.classList.remove('visible'); }
+}
+
+function scrollBottom() { chat.scrollTo({ top: chat.scrollHeight, behavior: 'smooth' }); }
+
+function startFirstSequence() {
+  document.getElementById('optionsLabel1').classList.remove('hidden');
+  document.getElementById('optionsGrid1').classList.remove('hidden');
+  requestAnimationFrame(() => {
+    document.getElementById('optionsLabel1').classList.add('visible');
+    document.querySelectorAll('#optionsGrid1 .option-card').forEach((c, i) =>
+      setTimeout(() => { c.classList.add('visible'); scrollBottom(); }, i * 140)
+    );
+  });
+}
+
+let option1Chosen = false;
+function selectOption1(card) {
+  if (option1Chosen) return;
+  option1Chosen = true;
+  document.querySelectorAll('#optionsGrid1 .option-card').forEach(c => {
+    c.classList.remove('selected');
+    if (c !== card) c.classList.add('disabled');
+  });
+  card.classList.add('selected');
+  startSecondSequence();
+}
+
+async function startSecondSequence() {
+  await show('row-typing-r1', 800);
+  await delay(2400);
+  hide('row-typing-r1');
+  await show('row-simon-r1', 80);
+
+  await show('row-typing-r2', 2800);
+  await delay(2400);
+  hide('row-typing-r2');
+  await show('row-simon-r2', 80);
+}
+
+document.getElementById('row-simon-q1').classList.add('visible');
+setTimeout(() => startFirstSequence(), 800);
+</script>
+</body>
+</html>
