@@ -2124,7 +2124,7 @@ async function startSecondSequence() {
   await show('row-simon-r3', 80);
 
   // Show resource
-  await showTyping('row-typing-res');
+  await showFastTyping('row-typing-res');
   await delay(1800); hide('row-typing-res');
   document.getElementById('resourceIframe').src = RESOURCE_URL;
   await show('row-simon-res', 80);
@@ -2135,12 +2135,12 @@ async function startSecondSequence() {
   hide('instr-res');
 
   // Continue with tarea sequence
-  await showTyping('row-typing-tarea');
+  await showFastTyping('row-typing-tarea');
   await delay(1800); hide('row-typing-tarea');
   await show('row-simon-tarea-txt', 80);
 
   // Tarea 01
-  await showTyping('row-typing-t1');
+  await showFastTyping('row-typing-t1');
   await delay(1800); hide('row-typing-t1');
   document.getElementById('tarea01Iframe').src = RESOURCE_MAP['tarea01'];
   await show('row-simon-t1', 80);
@@ -2150,7 +2150,7 @@ async function startSecondSequence() {
   hide('instr-t1');
 
   // Tarea 02
-  await showTyping('row-typing-t2');
+  await showFastTyping('row-typing-t2');
   await delay(1800); hide('row-typing-t2');
   document.getElementById('tarea02Iframe').src = RESOURCE_MAP['tarea02'];
   await show('row-simon-t2', 80);
@@ -2247,10 +2247,10 @@ const RESUME_AFTER_CLOSE = {
 
 async function resumeAfterMainClose() {
   hide('instr-res');
-  await showTyping('row-typing-tarea');
+  await showFastTyping('row-typing-tarea');
   await delay(1800); hide('row-typing-tarea');
   await show('row-simon-tarea-txt', 80);
-  await showTyping('row-typing-t1');
+  await showFastTyping('row-typing-t1');
   await delay(1800); hide('row-typing-t1');
   document.getElementById('tarea01Iframe').src = RESOURCE_MAP['tarea01'];
   await show('row-simon-t1', 80);
@@ -2262,7 +2262,7 @@ async function resumeAfterMainClose() {
 
 async function resumeAfterTarea01Close() {
   hide('instr-t1');
-  await showTyping('row-typing-t2');
+  await showFastTyping('row-typing-t2');
   await delay(1800); hide('row-typing-t2');
   document.getElementById('tarea02Iframe').src = RESOURCE_MAP['tarea02'];
   await show('row-simon-t2', 80);
@@ -2282,6 +2282,28 @@ window.addEventListener('keydown', e => { if (e.key === 'Escape') closeResource(
 function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
 
 let _lastMsgWords = 8;
+let _lastShownEl = null;
+let _sequencePaused = false;
+let _resumeResolvers = [];
+
+function waitIfPaused() {
+  if (!_sequencePaused) return Promise.resolve();
+  return new Promise(resolve => _resumeResolvers.push(resolve));
+}
+
+function _resumeSequence() {
+  _sequencePaused = false;
+  _resumeResolvers.splice(0).forEach(r => r());
+}
+
+chat.addEventListener('scroll', () => {
+  if (!_lastShownEl) return;
+  const chatRect = chat.getBoundingClientRect();
+  const elRect = _lastShownEl.getBoundingClientRect();
+  const isLastMsgVisible = elRect.bottom <= chatRect.bottom + 80;
+  if (isLastMsgVisible) { if (_sequencePaused) _resumeSequence(); }
+  else { _sequencePaused = true; }
+});
 
 function show(id, ms) {
   return new Promise(resolve => {
@@ -2290,6 +2312,7 @@ function show(id, ms) {
       if (!el) { resolve(); return; }
       el.classList.remove('hidden');
       if (id.startsWith('row-simon-') || id.startsWith('row-plain-')) {
+        _lastShownEl = el;
         const words = (el.textContent || '').trim().split(/\s+/).filter(w => w.length > 0).length;
         if (words > 0) _lastMsgWords = words;
       }
@@ -2298,9 +2321,16 @@ function show(id, ms) {
   });
 }
 
-function showTyping(id) {
-  const ms = Math.min(5500, Math.max(1500, _lastMsgWords * 300));
-  return show(id, ms);
+async function showTyping(id) {
+  await waitIfPaused();
+  await delay(Math.min(5500, Math.max(1500, _lastMsgWords * 300)));
+  await waitIfPaused();
+  return show(id, 0);
+}
+
+async function showFastTyping(id) {
+  await waitIfPaused();
+  return show(id, 900);
 }
 
 function showInstruction(id) {
@@ -2318,6 +2348,7 @@ function hide(id) {
 }
 
 function scrollBottom() {
+  if (_sequencePaused) return;
   chat.scrollTo({ top: chat.scrollHeight, behavior: 'smooth' });
 }
 
@@ -2447,7 +2478,7 @@ async function startChat2SecondSequence() {
   await delay(2400); hide('row-typing-r3-c2');
   await show('row-simon-r3-c2', 80);
 
-  await showTyping('row-typing-res-c2');
+  await showFastTyping('row-typing-res-c2');
   await delay(1800); hide('row-typing-res-c2');
   document.getElementById('reforzarIframe').src = 'Teoría/Diapo8/investigacion-secundaria.html';
   await show('row-simon-res-c2', 80);
@@ -2646,7 +2677,7 @@ function selectOption3(card) {
 }
 
 async function startChat3VideoSequence() {
-  await showTyping('row-typing-video-c3');
+  await showFastTyping('row-typing-video-c3');
   await delay(2200); hide('row-typing-video-c3');
   await show('row-video-c3', 80);
 }
@@ -2656,7 +2687,7 @@ async function startChat3FinalSequence() {
   await delay(2400); hide('row-typing-final-c3');
   await show('row-simon-final-c3', 80);
 
-  await showTyping('row-typing-res-c3');
+  await showFastTyping('row-typing-res-c3');
   await delay(1800); hide('row-typing-res-c3');
   document.getElementById('diapo11Iframe').src = 'Teoría/Diapo11/index.html';
   await show('row-simon-res-c3', 80);
@@ -2834,7 +2865,7 @@ async function startChat4ThirdSequence() {
 }
 
 async function startChat4FinalSequence() {
-  await showTyping('row-typing-res-c4');
+  await showFastTyping('row-typing-res-c4');
   await delay(1800); hide('row-typing-res-c4');
   document.getElementById('diapo15Iframe').src = 'Tareas/drag-and-drop/Diapo15/index.html';
   await show('row-simon-res-c4', 80);
@@ -2887,7 +2918,7 @@ async function startChat5SecondSequence() {
 
 // ── Sequence Diapo18/19 ───────────────────────────────────────────────────────
 async function startDiapo18Sequence() {
-  await showTyping('row-typing-res-c5');
+  await showFastTyping('row-typing-res-c5');
   await delay(1800); hide('row-typing-res-c5');
   document.getElementById('diapo18Iframe').src = 'Teoría/Diapo18/index.html';
   await show('row-simon-res-c5', 80);
@@ -2900,7 +2931,7 @@ async function startDiapo18Sequence() {
 
 // ── Sequence Diapo20 ──────────────────────────────────────────────────────────
 async function startDiapo20Sequence() {
-  await showTyping('row-typing-res-d20');
+  await showFastTyping('row-typing-res-d20');
   await delay(1800); hide('row-typing-res-d20');
   document.getElementById('diapo20Iframe').src = 'Tareas/drag-and-drop/Diapo 20/index_1.html';
   await show('row-simon-res-d20', 80);
@@ -2913,7 +2944,7 @@ async function startDiapo20Sequence() {
 
 // ── Sequence Diapo21 ──────────────────────────────────────────────────────────
 async function startDiapo21Sequence() {
-  await showTyping('row-typing-res-d21');
+  await showFastTyping('row-typing-res-d21');
   await delay(1800); hide('row-typing-res-d21');
   document.getElementById('diapo21Iframe').src = 'Teoría/Diapo21/index.html';
   await show('row-simon-res-d21', 80);
@@ -3022,7 +3053,7 @@ async function startChat6FourthSequence() {
 
 // ── Sequence Diapo26/27 ───────────────────────────────────────────────────────
 async function startDiapo26Sequence() {
-  await showTyping('row-typing-res-d26');
+  await showFastTyping('row-typing-res-d26');
   await delay(1800); hide('row-typing-res-d26');
   document.getElementById('diapo26Iframe').src = 'Teoría/Diapo26/que-sabes-hasta-ahora.html';
   await show('row-simon-res-d26', 80);
@@ -3034,7 +3065,7 @@ async function startDiapo26Sequence() {
 
 // ── Sequence Tarea05 ──────────────────────────────────────────────────────────
 async function startTarea05Sequence() {
-  await showTyping('row-typing-res-t05');
+  await showFastTyping('row-typing-res-t05');
   await delay(1800); hide('row-typing-res-t05');
   document.getElementById('tarea05Iframe').src = 'Tareas/Diapo 28 - Fill the gap y multiple choice/Tarea05_2.html';
   await show('row-simon-res-t05', 80);
@@ -3205,7 +3236,7 @@ const optionCallbacks7 = {
     await delay(600); showOptions7(2);
   },
   2: async () => {
-    await showTyping('row-typing-a1-c7'); await delay(2400); hide('row-typing-a1-c7'); await show('row-audio1-c7', 80);
+    await showFastTyping('row-typing-a1-c7'); await delay(2400); hide('row-typing-a1-c7'); await show('row-audio1-c7', 80);
   },
   3: async () => {
     await showTyping('row-typing-r3a-c7'); await delay(2400); hide('row-typing-r3a-c7'); await show('row-simon-r3a-c7', 80);
@@ -3214,7 +3245,7 @@ const optionCallbacks7 = {
     await delay(600); showOptions7(4);
   },
   4: async () => {
-    await showTyping('row-typing-a2-c7'); await delay(2400); hide('row-typing-a2-c7'); await show('row-audio2-c7', 80);
+    await showFastTyping('row-typing-a2-c7'); await delay(2400); hide('row-typing-a2-c7'); await show('row-audio2-c7', 80);
   },
   5: async () => {
     await showTyping('row-typing-r5a-c7'); await delay(2400); hide('row-typing-r5a-c7'); await show('row-simon-r5a-c7', 80);
@@ -3239,7 +3270,7 @@ const optionCallbacks7 = {
     await delay(600); showOptions7(9);
   },
   9: async () => {
-    await showTyping('row-typing-a3-c7'); await delay(2400); hide('row-typing-a3-c7'); await show('row-audio3-c7', 80);
+    await showFastTyping('row-typing-a3-c7'); await delay(2400); hide('row-typing-a3-c7'); await show('row-audio3-c7', 80);
   }
 };
 
@@ -3262,7 +3293,7 @@ async function afterAudio7_3() {
 
 // ── Sequence Diapo39 ──────────────────────────────────────────────────────────
 async function startDiapo39Sequence() {
-  await showTyping('row-typing-res-diapo39');
+  await showFastTyping('row-typing-res-diapo39');
   await delay(1800); hide('row-typing-res-diapo39');
   document.getElementById('diapo39Iframe').src = 'Tareas/Fill the gap/Diapo39/index6.html';
   await show('row-simon-res-diapo39', 80);
@@ -3389,13 +3420,13 @@ const optionCallbacks8 = {
     await delay(600); showOptions8(4);
   },
   4: async () => {
-    await showTyping('row-typing-audio-c8'); await delay(2400); hide('row-typing-audio-c8'); await show('row-audio-c8', 80);
+    await showFastTyping('row-typing-audio-c8'); await delay(2400); hide('row-typing-audio-c8'); await show('row-audio-c8', 80);
   }
 };
 
 // ── Sequence 3-Tareas (07c → 07 → 07b) ───────────────────────────────────────
 async function startTarea07cSequence() {
-  await showTyping('row-typing-res-tarea07c');
+  await showFastTyping('row-typing-res-tarea07c');
   await delay(1800); hide('row-typing-res-tarea07c');
   document.getElementById('tarea07cIframe').src = 'Tareas/Ordenar/Tarea07c.html';
   await show('row-simon-res-tarea07c', 80);
@@ -3507,13 +3538,13 @@ const optionCallbacks9 = {
     await delay(600); showOptions9(2);
   },
   2: async () => {
-    await showTyping('row-typing-audio-c9'); await delay(2400); hide('row-typing-audio-c9'); await show('row-audio-c9', 80);
+    await showFastTyping('row-typing-audio-c9'); await delay(2400); hide('row-typing-audio-c9'); await show('row-audio-c9', 80);
   }
 };
 
 // ── Sequence Tarea08b → Tarea08 ───────────────────────────────────────────────
 async function startTarea08bSequence() {
-  await showTyping('row-typing-res-tarea08b');
+  await showFastTyping('row-typing-res-tarea08b');
   await delay(1800); hide('row-typing-res-tarea08b');
   document.getElementById('tarea08bIframe').src = 'Tareas/True or false/Diapo 51/Tarea08b_1.html';
   await show('row-simon-res-tarea08b', 80);
@@ -3630,7 +3661,7 @@ async function startChat10Sequence() {
 }
 
 async function afterAudio10_1() {
-  await showTyping('row-typing-a2-c10'); await delay(2200); hide('row-typing-a2-c10'); await show('row-audio2-c10', 80);
+  await showFastTyping('row-typing-a2-c10'); await delay(2200); hide('row-typing-a2-c10'); await show('row-audio2-c10', 80);
 }
 
 
