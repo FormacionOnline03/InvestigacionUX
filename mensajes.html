@@ -703,7 +703,7 @@
       </div>
       <div class="option-card" role="button" tabindex="0" onclick="selectOption(this)" onkeydown="if(event.key==='Enter')selectOption(this)">
         <div class="option-tag">Opción 2</div>
-        <div class="option-text">Revisar primero los datos cuantitativos disponibles antes de hablar con usuarios.</div>
+        <div class="option-text">Hablar con los stakeholders para alinear necesidades, expectativas y tiempos de trabajo.</div>
       </div>
     </div>
 
@@ -976,7 +976,7 @@
     <div class="options-grid hidden" id="optionsGrid-c3">
       <div class="option-card" role="button" tabindex="0" onclick="selectOption3(this)" onkeydown="if(event.key==='Enter')selectOption3(this)">
         <div class="option-tag">Opción 1</div>
-        <div class="option-text">Propongo que primero revisemos la analítica de uso, los funnels de conversión, los tickets de soporte y los estudios previos del equipo.</div>
+        <div class="option-text">Propongo que primero revisemos las reseñas en la app store, los comentarios en redes sociales, los foros y opiniones de las personas usuarias, los estudios de mercado, informes de consultoras y artículos académicos.</div>
       </div>
       <div class="option-card" role="button" tabindex="0" onclick="selectOption3(this)" onkeydown="if(event.key==='Enter')selectOption3(this)">
         <div class="option-tag">Opción 2</div>
@@ -1416,6 +1416,12 @@
 
     <!-- C6-16. Typing q3 -->
     <div class="msg-row hidden" id="row-typing-q3-c6"><div class="avatar"><img src="imagenes/AvatarSimon.svg" alt="Simón"></div><div class="typing-dots"><span></span><span></span><span></span></div></div>
+
+    <!-- C6-16b. Simón q3 -->
+    <div class="msg-row hidden" id="row-simon-q3-c6">
+      <div class="avatar"><img src="imagenes/AvatarSimon.svg" alt="Simón"></div>
+      <div class="plain">Una vez que la funcionalidad est&#233; en producci&#243;n, &#191;qu&#233; t&#233;cnica usar&#237;as para medir resultados?</div>
+    </div>
 
     <!-- C6-17. Options label 3 (inline tras q3) -->
     <div class="options-label hidden" id="optionsLabel3-c6">Elige tu respuesta</div>
@@ -3006,6 +3012,7 @@ async function startChat6ThirdSequence() {
   await showTyping('row-typing-r4-c6'); await delay(2400); hide('row-typing-r4-c6');
   await show('row-simon-r4-c6', 80);
   await showTyping('row-typing-q3-c6'); await delay(2200); hide('row-typing-q3-c6');
+  await show('row-simon-q3-c6', 80);
   await delay(600);
   document.getElementById('optionsLabel3-c6').classList.remove('hidden');
   document.getElementById('optionsGrid3-c6').classList.remove('hidden');

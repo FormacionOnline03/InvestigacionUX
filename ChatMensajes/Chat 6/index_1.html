@@ -153,6 +153,12 @@
       <div class="typing-dots"><span></span><span></span><span></span></div>
     </div>
 
+    <!-- 16b. Simón q3 -->
+    <div class="msg-row hidden" id="row-simon-q3">
+      <div class="avatar">S</div>
+      <div class="plain">Una vez que la funcionalidad esté en producción, ¿qué técnica usarías para medir resultados?</div>
+    </div>
+
     <!-- 17. Options label 3 (inline after q3) -->
     <div class="options-label hidden" id="optionsLabel3">Elige tu respuesta</div>
 
@@ -251,6 +257,7 @@ async function startThirdSequence() {
   await show('row-typing-r3', 800); await delay(2400); hide('row-typing-r3'); await show('row-simon-r3', 80);
   await show('row-typing-r4', 2800); await delay(2400); hide('row-typing-r4'); await show('row-simon-r4', 80);
   await show('row-typing-q3', 2800); await delay(2200); hide('row-typing-q3');
+  await show('row-simon-q3', 80);
   await delay(600); showOptions('optionsLabel3', 'optionsGrid3');
 }
 
